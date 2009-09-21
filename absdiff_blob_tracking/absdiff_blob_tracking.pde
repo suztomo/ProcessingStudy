@@ -2,12 +2,13 @@ import hypermedia.video.*;
 
 OpenCV opencv;
 
+int windowWidth = 1280;
+int windowHeight = 800;//windowWidth / 4 * 3;
+
 int frameRate = 20;
 float disappearSeconds = 1.0;
 int BlobEntryHistoryThrethold = (int)(frameRate * (float)disappearSeconds);
-int BlobEntryNearByThrethold = 300;
-int minBlob = 200;
-int maxBlob = 700;
+int BlobEntryNearByThrethold = int (0.003 * windowWidth * windowWidth);
 int BlobEntryRadius = 30;
 int historyCount = 0;
 
@@ -15,33 +16,69 @@ BlobHistory blobHistory;
 int BlobEntryIdCount = 0;
 PFont font;
 
+
+int minBlob = int(0.002 * windowWidth * windowWidth);
+int maxBlob = int(0.03 * windowWidth * windowWidth);
+
 void setup() {
 
-    size( 320, 240 );
+  size( windowWidth, windowHeight );
 
-    frameRate(40);
+  frameRate(frameRate);
 
-    // open video stream
-    opencv = new OpenCV( this );
-    opencv.capture( 160, 120 );
-    
-    font = loadFont("Serif-30.vlw"); 
-    textFont(font); 
+  frame.setAlwaysOnTop(true); 
 
-    blobHistory = new BlobHistory();
+  // open video stream
+  opencv = new OpenCV( this );
+  opencv.capture( windowWidth / 2, windowHeight / 2);
+
+  font = loadFont("Serif-30.vlw"); 
+  textFont(font);
+
+  blobHistory = new BlobHistory();
 }
 
+float markerSpeed = 0.2;
+int markerRadius = 30;
+
+class Marker {
+  Point p;
+  String message;
+  Marker(Point initp, String s) {
+    p = initp;
+    message = s;
+    drawSelf();
+  }
+  public void moveTo(Point newp) {
+    move((newp.x - p.x) * markerSpeed, (newp.y - p.y) * markerSpeed);
+    this.drawSelf();
+  }
+  private void move(float speedX, float speedY) {
+    p.x += int(speedX);
+    p.y += int(speedY);
+  }
+  
+  private void drawSelf() {
+    fill(0, 0, 0);
+    ellipse(p.x, p.y, markerRadius, markerRadius);
+
+    fill(0, 102, 153);
+    text(message, p.x, p.y); 
+  }
+}
 
 class BlobEntry {
   int id;
   int count;
   int updatedCount;
   Point p;
+  Marker m;
   BlobEntry(int count, Point pp) {
     count = count;
     p = pp;
     updatedCount=0;
     id = ++BlobEntryIdCount;
+    m = null;
   }
   boolean isOld(int nowCount) {
     return (nowCount - count) >  BlobEntryHistoryThrethold;
@@ -54,11 +91,11 @@ class BlobEntry {
       // Avoid noise.
       return;
     }
-    fill(0, 0, 0);
-    ellipse(p.x, p.y, BlobEntryRadius, BlobEntryRadius);
-
-    fill(0, 102, 153);
-    text("" + id, p.x, p.y); 
+    if (m != null) {
+      m.moveTo(p);
+    } else {
+      m = new Marker(p, "" + id); 
+    }
   }
   void updatePoint(Point p) {
     this.p = p;
@@ -110,42 +147,41 @@ class BlobHistory {
 }
 
 void draw() {
-    background(192);
-    opencv.read();           // grab frame from camera
-    // display the image
-    image( opencv.image(), 0, 0 );
+  background(192);
+  opencv.read();           // grab frame from camera
+  // display the image
+  image( opencv.image(), 0, 0 );
+  opencv.convert(OpenCV.GRAY);
 
-    /* Only memorize the image when it is the first drawing */
-    if (historyCount == 0) {
-      opencv.remember();
-      historyCount = 1;
-      return;
-    }
-    opencv.absDiff();                            // make the difference between the current image and the image in memory
+  /* Only memorize the image when it is the first drawing */
+  if (historyCount == 0) {
+    opencv.remember();
+    historyCount = 1;
+    return;
+  }
+  opencv.absDiff();                            // make the difference between the current image and the image in memory
 
-    image( opencv.image(), 160, 0 );
-    opencv.threshold(20);    // set black & white threshold 
+  image( opencv.image(), windowWidth / 2, 0 );
+  opencv.threshold(50);    // set black & white threshold 
 
-    image( opencv.image(), 160, 120 );
-    // find blobs
-    Blob[] blobs  = opencv.blobs( minBlob, width*height/2, 5, true, OpenCV.MAX_VERTICES*4 );
+  image( opencv.image(), windowWidth / 2, windowHeight / 2 );
+  // find blobs
+  Blob[] blobs  = opencv.blobs( minBlob, width*height/2, 5, true, OpenCV.MAX_VERTICES*4 );
 
-    // draw blob results
-    println(blobs.length);
-    
-    blobHistory.updateBlobs(blobs);
+  blobHistory.updateBlobs(blobs);
 
-    ArrayList bhe = blobHistory.entries();
-    for (int i=0; i<bhe.size(); ++i) {
-      BlobEntry be = (BlobEntry)bhe.get(i);
-      be.drawPoint();
-    }
-    
-    blobHistory.removeOldEntries();
-    
-    opencv.remember();  // store the actual image in memory
-    historyCount++;
+  ArrayList bhe = blobHistory.entries();
+  for (int i=0; i<bhe.size(); ++i) {
+    BlobEntry be = (BlobEntry)bhe.get(i);
+    be.drawPoint();
+  }
 
-//    delay(100);
+  blobHistory.removeOldEntries();
+
+  //opencv.remember();  // store the actual image in memory
+  historyCount++;
+
+  //    delay(100);
 }
+
 
