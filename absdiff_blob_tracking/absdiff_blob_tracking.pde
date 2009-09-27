@@ -1,4 +1,10 @@
+import twitter4j.org.json.*;
+import twitter4j.*;
+import twitter4j.http.*;
+import twitter4j.examples.*;
+
 import hypermedia.video.*;
+import processing.video.*;
 
 OpenCV opencv;
 
@@ -16,8 +22,13 @@ BlobHistory blobHistory;
 int BlobEntryIdCount = 0;
 PFont font;
 
+Twitter twitter;
 
-int minBlob = int(0.002 * windowWidth * windowWidth);
+    //メッセージ
+java.util.List statuses;
+
+
+int minBlob = int(0.001 * windowWidth * windowWidth);
 int maxBlob = int(0.03 * windowWidth * windowWidth);
 
 void setup() {
@@ -28,14 +39,29 @@ void setup() {
 
   frame.setAlwaysOnTop(true); 
 
+  println(Capture.list());
+
   // open video stream
   opencv = new OpenCV( this );
-  opencv.capture( windowWidth / 2, windowHeight / 2);
+
+  opencv.capture( windowWidth / 2, windowHeight / 2, 2);
 
   font = loadFont("Serif-30.vlw"); 
-  textFont(font);
+  PFont f= createFont("Osaka", 20);
+  textFont(f);
 
   blobHistory = new BlobHistory();
+/*
+  try { 
+  twitter = new Twitter("Univ_of_Tokyo","testpass");
+  java.util.List sss = twitter.getFriendsStatuses();
+  
+  statuses = sss;
+  } catch(Exception e) {
+    println("error");
+    println(e.getMessage()); 
+  }
+*/
 }
 
 float markerSpeed = 0.2;
@@ -63,7 +89,11 @@ class Marker {
     ellipse(p.x, p.y, markerRadius, markerRadius);
 
     fill(0, 102, 153);
-    text(message, p.x, p.y); 
+    text(message, p.x, p.y);
+/*
+    User  s = (User)statuses.get(int(message)%10);
+    println(s);
+    text(s.getStatusText());*/
   }
 }
 
@@ -151,7 +181,7 @@ void draw() {
   opencv.read();           // grab frame from camera
   // display the image
   image( opencv.image(), 0, 0 );
-  opencv.convert(OpenCV.GRAY);
+//  opencv.convert(OpenCV.GRAY);
 
   /* Only memorize the image when it is the first drawing */
   if (historyCount == 0) {
@@ -162,7 +192,7 @@ void draw() {
   opencv.absDiff();                            // make the difference between the current image and the image in memory
 
   image( opencv.image(), windowWidth / 2, 0 );
-  opencv.threshold(50);    // set black & white threshold 
+  opencv.threshold(60);    // set black & white threshold 
 
   image( opencv.image(), windowWidth / 2, windowHeight / 2 );
   // find blobs
@@ -184,4 +214,7 @@ void draw() {
   //    delay(100);
 }
 
+void keyPressed(){
+  opencv.remember();
+}
 
