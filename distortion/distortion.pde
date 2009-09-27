@@ -1,25 +1,26 @@
+/*
 import twitter4j.org.json.*;
 import twitter4j.*;
 import twitter4j.http.*;
 import twitter4j.examples.*;
-
+*/
 import hypermedia.video.*;
 import processing.video.*;
 
 OpenCV opencv;
 
-int scl = 1;
+float scl = 1;
 
-int windowWidth = 1280 / scl;
-int windowHeight = 800 / scl;//windowWidth / 4 * 3;
+int windowWidth = int(1280 / scl);
+int windowHeight = int(800 / scl);//windowWidth / 4 * 3;
 
-int captureWidth = windowWidth / 2;
-int captureHeight = windowHeight / 2;
+int captureWidth = windowWidth / 1;
+int captureHeight = windowHeight / 1;
 
-int frameRate = 20;
+int frameRate = 10;
 float disappearSeconds = 1.0;
 int BlobEntryHistoryThrethold = (int)(frameRate * (float)disappearSeconds);
-int BlobEntryNearByThrethold = int (0.003 * windowWidth * windowWidth);
+int BlobEntryNearByThrethold = int (0.01 * windowWidth * windowWidth);
 int BlobEntryRadius = 30;
 int historyCount = 0;
 
@@ -27,13 +28,13 @@ BlobHistory blobHistory;
 int BlobEntryIdCount = 0;
 PFont font;
 
-Twitter twitter;
+//Twitter twitter;
 
     //メッセージ
 java.util.List statuses;
 
 
-int minBlob = int(0.001 * windowWidth * windowWidth);
+int minBlob = int(0.0005 * windowWidth * windowWidth);
 int maxBlob = int(0.03 * windowWidth * windowWidth);
 
 
@@ -45,6 +46,9 @@ float diver;
 int minY = captureHeight, maxY = 0, minX = captureWidth, maxX = 0;
 
 int showDistortedImage = 0;
+
+
+
 
 void mouseClicked() {
   if (newCornersSize >= 3)
@@ -66,6 +70,10 @@ void mouseClicked() {
 
     a = vx.x; b = vy.x; c = vx.y; d  = vy.y;
     diver = a * d - b * c;
+    if (diver == 0) {
+      stop(); 
+      println("Div is zero.");
+    }
     for (int i=0; i<newCorners.length; i++) {
       if (minY > newCorners[i].y) {
         minY = newCorners[i].y;
@@ -106,7 +114,6 @@ void setup() {
 
   opencv.capture( captureWidth, captureHeight, 2);
 
-  font = loadFont("Serif-30.vlw"); 
   PFont f= createFont("Osaka", 20);
   textFont(f);
 
@@ -353,31 +360,29 @@ PImage createDistortedImage(PImage beforeImage) {
 }
 
 void draw() {
-  background(192);
+  background(255, 255, 255);
   opencv.read();           // grab frame from camera
   // display the image
-  image( opencv.image(), captureWidth, 0 );
-  //  opencv.convert(OpenCV.GRAY);
-
-  for (int i=0; i< newCornersSize; i++) {
-    fill(255, 0, 0);
-    ellipse(newCorners[i].x + captureWidth, newCorners[i].y, 5, 5);
-  }
-
   if (showDistortedImage == 0) {
+    image( opencv.image(), 0, 0 );
+    for (int i=0; i< newCornersSize; i++) {
+      fill(255, 0, 0);
+      ellipse(newCorners[i].x + captureWidth, newCorners[i].y, 5, 5);
+    }
     return;
   }
+  //  opencv.convert(OpenCV.GRAY);
 
   PImage beforeImage = opencv.image();
 
   /* get the vectors of AB and AD */
-//  PImage distortedImage = createDistortedImage(beforeImage);
-//  image(distortedImage, 0, captureHeight);
-  PImage distortedImageInterp = createDistortedImageInterp(beforeImage);
-  image(distortedImageInterp, 0, 0);
-  opencv.copy(distortedImageInterp);
-  opencv.blur( OpenCV.BLUR, 13 );
-  image( opencv.image(), 0, 0);
+  PImage distortedImage = createDistortedImage(beforeImage);
+//  image(distortedImage, 0, 0);
+//  PImage distortedImageInterp = createDistortedImageInterp(beforeImage);
+//  image(distortedImageInterp, 0, 0);
+  opencv.copy(distortedImage);
+  opencv.blur( OpenCV.BLUR, 5 );
+//  image( opencv.image(), 0, 0);
 
   /* Only memorize the image when it is the first drawing */
   if (historyCount == 0) {
@@ -386,18 +391,18 @@ void draw() {
     return;
   }
   opencv.absDiff();                            // make the difference between the current image and the image in memory
-  image(opencv.image(), captureWidth, captureHeight );
+//  image(opencv.image(), 0, 0);
 //  image(opencv.image(OpenCV.MEMORY), captureWidth, captureHeight);
-  opencv.threshold(20);    // set black & white threshold 
+  opencv.threshold(10);    // set black & white threshold 
 
-  image( opencv.image(), 0, captureHeight );
+  //image( opencv.image(), 0, 0);
 
   // find blobs
   Blob[] blobs  = opencv.blobs( minBlob, width*height/2, 5, true, OpenCV.MAX_VERTICES*4 );
-  println(blobs.length);
   blobHistory.updateBlobs(blobs);
 
   ArrayList bhe = blobHistory.entries();
+
   for (int i=0; i<bhe.size(); ++i) {
     BlobEntry be = (BlobEntry)bhe.get(i);
     be.drawPoint();
@@ -413,7 +418,12 @@ void draw() {
 
 void keyPressed(){
 //  opencv.remember();
-  newCornersSize = 0;
-  showDistortedImage = 0;
+  if (key == CODED) {
+    if (keyCode == UP) {
+      newCornersSize = 0;
+      showDistortedImage = 0;
+      
+    }
+  }
 }
 
