@@ -47,9 +47,6 @@ int minY = captureHeight, maxY = 0, minX = captureWidth, maxX = 0;
 
 int showDistortedImage = 0;
 
-
-
-
 void mouseClicked() {
   if (newCornersSize >= 3)
     return;
@@ -132,7 +129,7 @@ void setup() {
 }
 
 float markerSpeed = 0.2;
-int markerRadius = 30;
+int markerRadius = captureWidth / 10;
 
 class Marker {
   Point p;
@@ -153,10 +150,10 @@ class Marker {
   
   private void drawSelf() {
     fill(0, 0, 0);
-    ellipse(p.x, p.y, markerRadius, markerRadius);
+    ellipse(p.x + markerRadius, p.y, markerRadius, markerRadius);
 
     fill(0, 102, 153);
-    text(message, p.x, p.y);
+    text(message, p.x + markerRadius, p.y);
 /*
     User  s = (User)statuses.get(int(message)%10);
     println(s);
@@ -184,7 +181,7 @@ class BlobEntry {
     return pow(p.x - pp.x, 2) + pow(p.y - pp.y, 2) < BlobEntryNearByThrethold;
   }
   void drawPoint() {
-    if (updatedCount < 3) {
+    if (updatedCount < 2) {
       // Avoid noise.
       return;
     }
@@ -395,7 +392,7 @@ void draw() {
 //  image(opencv.image(OpenCV.MEMORY), captureWidth, captureHeight);
   opencv.threshold(10);    // set black & white threshold 
 
-  //image( opencv.image(), 0, 0);
+  image( opencv.image(), 0, 0);
 
   // find blobs
   Blob[] blobs  = opencv.blobs( minBlob, width*height/2, 5, true, OpenCV.MAX_VERTICES*4 );
@@ -423,6 +420,19 @@ void keyPressed(){
       newCornersSize = 0;
       showDistortedImage = 0;
       
+    } else {
+      PImage beforeImage = opencv.image();
+
+     /* get the vectors of AB and AD */
+      PImage distortedImage = createDistortedImage(beforeImage);
+    //  image(distortedImage, 0, 0);
+    //  PImage distortedImageInterp = createDistortedImageInterp(beforeImage);
+    //  image(distortedImageInterp, 0, 0);
+      opencv.copy(distortedImage);
+      opencv.blur( OpenCV.BLUR, 5 );
+
+      opencv.remember(OpenCV.BUFFER);
+      historyCount = 1;
     }
   }
 }
