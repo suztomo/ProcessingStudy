@@ -11,13 +11,14 @@ OpenCV opencv;
 
 float scl = 1;
 
-int windowWidth = int(1280 / scl);
-int windowHeight = int(800 / scl);//windowWidth / 4 * 3;
+int windowWidth = int(800 / scl);
+int windowHeight = int(600 / scl);//windowWidth / 4 * 3;
 
-int captureWidth = windowWidth / 1;
-int captureHeight = windowHeight / 1;
+int captureScale = 2;
+int captureWidth = windowWidth / captureScale;
+int captureHeight = windowHeight / captureScale;
 
-int frameRate = 10;
+int frameRate = 20;
 float disappearSeconds = 1.0;
 int BlobEntryHistoryThrethold = (int)(frameRate * (float)disappearSeconds);
 int BlobEntryNearByThrethold = int (0.01 * windowWidth * windowWidth);
@@ -98,7 +99,7 @@ void mouseClicked() {
 void setup() {
   newCorners = new Point[3];
 
-  size( windowWidth, windowHeight );
+  size( windowWidth + captureWidth, windowHeight );
 
   frameRate(frameRate);
 
@@ -109,7 +110,7 @@ void setup() {
   // open video stream
   opencv = new OpenCV( this );
 
-  opencv.capture( captureWidth, captureHeight, 2);
+  opencv.capture( captureWidth, captureHeight, 0);
 
   PFont f= createFont("Osaka", 20);
   textFont(f);
@@ -150,10 +151,10 @@ class Marker {
   
   private void drawSelf() {
     fill(0, 0, 0);
-    ellipse(p.x + markerRadius, p.y, markerRadius, markerRadius);
+    ellipse(p.x * captureScale + markerRadius, p.y * captureScale, markerRadius, markerRadius);
 
     fill(0, 102, 153);
-    text(message, p.x + markerRadius, p.y);
+    text(message, p.x * captureScale + markerRadius, p.y * captureScale);
 /*
     User  s = (User)statuses.get(int(message)%10);
     println(s);
@@ -237,6 +238,9 @@ class BlobHistory {
         this.put(new BlobEntry(historyCount, p));
       }
     }
+  }
+  void clear() {
+    history = new ArrayList();    
   }
 }
 
@@ -390,9 +394,9 @@ void draw() {
   opencv.absDiff();                            // make the difference between the current image and the image in memory
 //  image(opencv.image(), 0, 0);
 //  image(opencv.image(OpenCV.MEMORY), captureWidth, captureHeight);
-  opencv.threshold(10);    // set black & white threshold 
+  opencv.threshold(30);    // set black & white threshold 
 
-  image( opencv.image(), 0, 0);
+  image( opencv.image(), windowWidth, 0);
 
   // find blobs
   Blob[] blobs  = opencv.blobs( minBlob, width*height/2, 5, true, OpenCV.MAX_VERTICES*4 );
@@ -419,7 +423,7 @@ void keyPressed(){
     if (keyCode == UP) {
       newCornersSize = 0;
       showDistortedImage = 0;
-      
+      blobHistory.clear();
     } else {
       PImage beforeImage = opencv.image();
 
