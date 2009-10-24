@@ -7,12 +7,13 @@ import twitter4j.examples.*;
 import hypermedia.video.*;
 import processing.video.*;
 
+
 OpenCV opencv;
 
 float scl = 1;
 
-int windowWidth = int(800 / scl);
-int windowHeight = int(600 / scl);//windowWidth / 4 * 3;
+int windowWidth = int(1024 / scl);
+int windowHeight = int(768 / scl);//windowWidth / 4 * 3;
 
 int captureScale = 2;
 int captureWidth = windowWidth / captureScale;
@@ -21,8 +22,8 @@ int captureHeight = windowHeight / captureScale;
 int frameRate = 20;
 float disappearSeconds = 1.0;
 int BlobEntryHistoryThrethold = (int)(frameRate * (float)disappearSeconds);
-int BlobEntryNearByThrethold = int (0.01 * windowWidth * windowWidth);
-int BlobEntryRadius = 30;
+int BlobEntryNearByThrethold = int (0.1 * windowWidth * windowWidth);
+int BlobEntryRadius = 60;
 int historyCount = 0;
 
 BlobHistory blobHistory;
@@ -130,7 +131,7 @@ void setup() {
 }
 
 float markerSpeed = 0.2;
-int markerRadius = captureWidth / 10;
+int markerRadius = captureWidth / 5;
 
 class Marker {
   Point p;
@@ -151,10 +152,10 @@ class Marker {
   
   private void drawSelf() {
     fill(0, 0, 0);
-    ellipse(p.x * captureScale + markerRadius, p.y * captureScale, markerRadius, markerRadius);
+    ellipse(p.x * captureScale, p.y * captureScale, markerRadius, markerRadius);
 
     fill(0, 102, 153);
-    text(message, p.x * captureScale + markerRadius, p.y * captureScale);
+    text(message, p.x * captureScale, p.y * captureScale);
 /*
     User  s = (User)statuses.get(int(message)%10);
     println(s);
