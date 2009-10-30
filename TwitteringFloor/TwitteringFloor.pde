@@ -153,9 +153,32 @@ void draw() {
     PImage captureImage = opencv.image();
     PImage maskImage = createDistortedImage(captureImage);
     opencv.copy(maskImage);
-    image( opencv.image(), ManagerWindowFrameWidth, ManagerWindowFrameHeight );             // display the result on the bottom right
+    image( opencv.image(), ManagerWindowFrameWidth, ManagerWindowFrameHeight );
+    image( opencv.image(), 0, ManagerWindowFrameHeight * 2);
+    opencv.threshold(32);
+
+    Blob[] blobs = opencv.blobs( 30, ManagerWindowFrameWidth * ManagerWindowFrameHeight/2, 5,
+                                 false, OpenCV.MAX_VERTICES*4 );
+    println(blobs.length);
+    for (int i=0; i<blobs.length; ++i) {
+        Blob blob = blobs[i];
+        fill(255, 0, 0);
+        beginShape();
+        for( int j=0; j<blob.points.length; j++ ) {
+            vertex( blob.points[j].x + 0, blob.points[j].y + ManagerWindowFrameHeight * 2);
+        }
+        endShape(CLOSE);
+
+
+        /*
+        strole(255,255, 0);
+        rect(blob.rectangle.x, blob.rectangle.y, blob.rectangle.width, blob.rectangle.height);
+        */
+    }
+
+
     ap.image( opencv.image(), 0, 0);
-    
+
 }
 
 void keyPressed() {
