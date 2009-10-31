@@ -15,6 +15,11 @@ public class DebugApplet extends PApplet{
         textFont(font);
     }
     public void draw(){
+        /*
+        fill(255,255,255);
+        rect(0, 0, DisplayWindowWidth, DisplayWindowHeight);
+        */
+        fill(0, 0, 0);
         text("風船多すぎ（´・ω・｀）", 0, 300);
     }
 }

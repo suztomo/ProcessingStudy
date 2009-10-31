@@ -1,9 +1,7 @@
 void displayAllPoints() {
-    for (int i=0; i < cornersSize; i++) {
-        displayPoint(corners[i]);
+    for (int i=0; i < corners.size(); i++) {
+        displayPoint((Point)corners.get(i));
     }
-    if (cornersSize == 0)
-        corners = new Point[3];
 }
 
 void displayPoint(Point p) {
@@ -12,7 +10,7 @@ void displayPoint(Point p) {
 }
 
 
-void displayBlobs(Blob[] blobs) {
+void displayBlobs(Blob[] blobs, int offsetX, int offsetY) {
     for (int i=0; i<blobs.length; ++i) {
         Blob blob = blobs[i];
         fill(255, 0, 0);
@@ -26,7 +24,8 @@ void displayBlobs(Blob[] blobs) {
             }
         }
         endShape(CLOSE);
-        top.y += ManagerWindowFrameHeight*2;
+        top.x += offsetX;
+        top.y += offsetY;
         fill(0, 255, 0);
         ellipse(top.x, top.y, 5, 5);
         /*
@@ -35,3 +34,64 @@ void displayBlobs(Blob[] blobs) {
         */
     }
 }
+
+Boolean pointInFrame(Point p) {
+    if (p.x < 0 || p.x >= ManagerWindowFrameWidth ||
+        p.y < 0 || p.y >= ManagerWindowFrameHeight) {
+        return false;
+    }
+    return true;
+}
+
+void calculateVecs() {
+    if (corners.size() != 3) {
+        println("size of corners is wrong");
+    }
+    for (int i=0; i<corners.size(); ++i) {
+        if (!pointInFrame((Point)corners.get(i))) {
+            println("Wrong point found!");
+            println((Point)corners.get(i));
+        }
+    }
+    OA = new Point();
+    OB = new Point();
+
+    origin = (Point)corners.get(0);
+    OA.x = ((Point)corners.get(1)).x - origin.x;
+    OA.y = ((Point)corners.get(1)).y - origin.y;
+    OB.x = ((Point)corners.get(2)).x - origin.x;
+    OB.y = ((Point)corners.get(2)).y - origin.y;
+}
+
+
+
+PImage createDistortedImage(PImage beforeImage) {
+  PImage distortedImage = new PImage(ManagerWindowFrameWidth, ManagerWindowFrameHeight);
+  for (int y=0; y<ManagerWindowFrameHeight; ++y) {
+      for (int x = 0; x < ManagerWindowFrameWidth; ++x) {
+          int cl;
+          float xt = ((float)x / ManagerWindowFrameWidth);
+          float yt = ((float)y / ManagerWindowFrameHeight);
+          int bx = int(origin.x + OA.x * xt + OB.x * yt);
+          int by = int(origin.y + OA.y * xt + OB.y * yt);
+          cl = beforeImage.pixels[by * ManagerWindowFrameWidth + bx];
+          distortedImage.pixels[y * ManagerWindowFrameWidth + x] = cl;
+      }
+  }
+  return distortedImage;
+}
+
+void resetPoints() {
+    corners = new ArrayList();
+    if (ap == null) {
+        println("ap is not defined");
+    }
+}
+
+void createFonts() {
+    PFont font = createFont("Osaka", 20);
+    textFont(font);
+}
+
+
+
