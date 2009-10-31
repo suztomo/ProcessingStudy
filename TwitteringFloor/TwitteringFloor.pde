@@ -26,9 +26,14 @@ ArrayList corners;
 Point origin;
 Point OA, OB;
 
+ArrayList shadows;
+
 void setup() {
     size( ManagerWindowWidth, ManagerWindowHeight );
     fr = new DebugFrame();
+
+    println(ap);
+    println(this);
 
     opencv = new OpenCV( this );
     opencv.capture( ManagerWindowFrameWidth, ManagerWindowFrameHeight );
@@ -40,6 +45,8 @@ void setup() {
     resetPoints();
 
     readPointFile();
+
+    shadows = new ArrayList();
 }
 
 
@@ -69,12 +76,31 @@ void draw() {
     PImage maskImage = createDistortedImage(captureImage);
     opencv.copy(maskImage);
     image( opencv.image(), ManagerWindowFrameWidth, ManagerWindowFrameHeight );
-    image( opencv.image(), 0, ManagerWindowFrameHeight * 2);
-    opencv.threshold(60);
 
-    Blob[] blobs = opencv.blobs( 30, ManagerWindowFrameWidth * ManagerWindowFrameHeight/2, 5,
+    opencv.convert(OpenCV.GRAY);
+    opencv.threshold(32);
+    image( opencv.image(), 0, ManagerWindowFrameHeight * 2);
+
+    Blob[] blobs = opencv.blobs( 1200, ManagerWindowFrameWidth * ManagerWindowFrameHeight/2, 5,
                                  false, OpenCV.MAX_VERTICES*4 );
+    Point[] blobtops = blobTops(blobs);
     displayBlobs(blobs, 0, ManagerWindowFrameHeight*2);
+    for (int i=0; i<blobtops.length; ++i) {
+        Point p = blobtops[i];
+        Boolean nearByFound = false;
+        for (int j=0; j<shadows.size(); ++j) {
+            Shadow s = (Shadow)shadows.get(j);
+            if (s.isNearBy(p.x, p.y)) {
+                s.update(p.x, p.y);
+                nearByFound = true;
+                s.displayVoice();
+            }
+        }
+        if (!nearByFound) {
+            Shadow s = new Shadow(p.x, p.y, this);
+            shadows.add(s);
+        }
+    }
 
     /*
       Display the result.

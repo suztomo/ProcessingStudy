@@ -9,25 +9,45 @@ void displayPoint(Point p) {
     ellipse(p.x, p.y, 10, 10);
 }
 
+Point [] blobTops(Blob[] blobs) {
+    Point[] points = new Point[blobs.length];
+    for(int i=0; i<blobs.length; ++i) {
+        Blob blob = blobs[i];
+        int xsum = 0;
+        Point top = new Point();
+        top.y = ManagerWindowFrameHeight;
+        for(int j=0; j<blob.points.length; ++j) {
+            if (top.y > blob.points[j].y) {
+                top = blob.points[j];
+            }
+            xsum += blob.points[j].x;
+        }
+        top.x = xsum / blob.points.length;
+        points[i] = top;
+    }
+    return points;
+}
 
 void displayBlobs(Blob[] blobs, int offsetX, int offsetY) {
+
     for (int i=0; i<blobs.length; ++i) {
         Blob blob = blobs[i];
         fill(255, 0, 0);
         beginShape();
         Point top = new Point();
         top.y = ManagerWindowFrameHeight;
+        int xsum = 0;
         for( int j=0; j<blob.points.length; j++ ) {
             vertex( blob.points[j].x + 0, blob.points[j].y + ManagerWindowFrameHeight * 2);
             if (top.y > blob.points[j].y) {
                 top = blob.points[j];
             }
+            xsum += blob.points[j].x;
         }
+        top.x = xsum / blob.points.length;
         endShape(CLOSE);
-        top.x += offsetX;
-        top.y += offsetY;
         fill(0, 255, 0);
-        ellipse(top.x, top.y, 5, 5);
+        ellipse(top.x + offsetX, top.y + offsetY, 5, 5);
         /*
         strole(255,255, 0);
         rect(blob.rectangle.x, blob.rectangle.y, blob.rectangle.width, blob.rectangle.height);
@@ -87,11 +107,4 @@ void resetPoints() {
         println("ap is not defined");
     }
 }
-
-void createFonts() {
-    PFont font = createFont("Osaka", 20);
-    textFont(font);
-}
-
-
 
