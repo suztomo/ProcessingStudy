@@ -2,8 +2,6 @@ PFont DefaultFont;
 ArrayList[] FontsBySize;
 
 void createFonts() {
-    textMode(SCREEN);
-
     PFont font = createFont("Osaka", 20);
     DefaultFont = font;
     textFont(font);

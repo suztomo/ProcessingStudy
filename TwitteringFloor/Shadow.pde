@@ -8,10 +8,11 @@ public class Shadow{
         x = _x;
         y = _y;
         String message = "Hello\n World";
-        textLeading(20);
+        
         PFont font = selectFont(message);
         voice = new Voice(_x, _y, message, font, canvas,
                           0, ManagerWindowFrameHeight*2);
+
     }
 
     public void update(int _x, int _y) {

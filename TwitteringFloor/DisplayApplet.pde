@@ -1,14 +1,14 @@
-public class DebugFrame extends Frame{
-    public DebugFrame(){
+public class DisplayFrame extends Frame{
+    public DisplayFrame(){
         setBounds(0,0, DisplayWindowWidth, DisplayWindowHeight*2);
-        ap = new DebugApplet();
+        ap = new DisplayApplet();
         add(ap);
         ap.init();
         show();
     }
 }
 
-public class DebugApplet extends PApplet{
+public class DisplayApplet extends PApplet{
     public void setup(){
         size(DisplayWindowWidth*2, DisplayWindowHeight*2);
         PFont font = createFont("Osaka", 20);
@@ -20,6 +20,6 @@ public class DebugApplet extends PApplet{
         rect(0, 0, DisplayWindowWidth, DisplayWindowHeight);
         */
         fill(0, 0, 0);
-        text("風船多すぎ（´・ω・｀）", 0, 300);
+        text("日本語のテストutf-8", 0, 300);
     }
 }

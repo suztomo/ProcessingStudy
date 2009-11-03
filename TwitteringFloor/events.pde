@@ -20,5 +20,6 @@ void keyPressed() {
         PointsExistFlag = false;
     } else {
         opencv.remember();  // store the actual image in memory
+        shadows.clear();
     }
 }

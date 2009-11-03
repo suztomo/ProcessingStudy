@@ -1,3 +1,22 @@
+void displayShadowsManageWindow(Point[] blobtops, ArrayList shadows) {
+    for (int i=0; i<blobtops.length; ++i) {
+        Point p = blobtops[i];
+        Boolean nearByFound = false;
+        for (int j=0; j<shadows.size(); ++j) {
+            Shadow s = (Shadow)shadows.get(j);
+            if (s.isNearBy(p.x, p.y)) {
+                s.update(p.x, p.y);
+                nearByFound = true;
+                s.displayVoice();
+            }
+        }
+        if (!nearByFound) {
+            Shadow s = new Shadow(p.x, p.y, this);
+            shadows.add(s);
+        }
+    }
+}
+
 void displayAllPoints() {
     for (int i=0; i < corners.size(); i++) {
         displayPoint((Point)corners.get(i));

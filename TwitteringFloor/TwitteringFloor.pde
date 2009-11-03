@@ -1,6 +1,5 @@
 import hypermedia.video.*;
 
-
 OpenCV opencv;
 
 int ManagerWindowFrameWidth = 360; 
@@ -13,15 +12,14 @@ int DisplayWindowWidth = 800;
 int DisplayWindowHeight = 600;
 String PointsFileName = "points.txt";
 
+Blob[] prev_blobs;
 
-// window for Debug
-DebugFrame fr;
-DebugApplet ap;
+// window for Display voices
+DisplayFrame fr;
+DisplayApplet ap;
 Boolean PointsExistFlag = false;
 
-//Point[] corners;
 ArrayList corners;
-//int cornersSize = 0;
 
 Point origin;
 Point OA, OB;
@@ -30,7 +28,7 @@ ArrayList shadows;
 
 void setup() {
     size( ManagerWindowWidth, ManagerWindowHeight );
-    fr = new DebugFrame();
+    fr = new DisplayFrame();
 
     println(ap);
     println(this);
@@ -55,53 +53,71 @@ void draw() {
     rect(0, 0, ManagerWindowWidth, ManagerWindowHeight);
 
 
-    opencv.read();                               // grab frame from camera
-    image( opencv.image(), 0, 0);                // show the original image
+    opencv.read();     // grab frame from camera
+
+    /*
+      show the original image
+      ■□
+      □□
+      □□
+     */
+    image( opencv.image(), 0, 0);
     ap.image(opencv.image(),0 ,0);
 
     displayAllPoints();
-    // make the difference between the current image and the image in memory
+
+    /*
+      display the image in memory on the right
+      □■
+      □□
+      □□
+     */
     image(opencv.image(OpenCV.MEMORY), ManagerWindowFrameWidth, 0);
 
-    // Caribrated image
+    // make the difference between the current image and the image in memory
     opencv.absDiff();
-    // display the image in memory on the right
+
+    /*
+      display the difference
+      □□
+      ■□
+      □□
+     */
     image( opencv.image(), 0, ManagerWindowFrameHeight );
 
     if (!PointsExistFlag) {
+        // return if there is no calibration points.
         return;
     }
 
     PImage captureImage = opencv.image();
     PImage maskImage = createDistortedImage(captureImage);
     opencv.copy(maskImage);
+    /*
+      display the distorted image
+      □□
+      □■
+      □□
+     */
     image( opencv.image(), ManagerWindowFrameWidth, ManagerWindowFrameHeight );
 
+
+    /*
+      display the distorted image with blobs
+      □□
+      □□
+      ■□
+     */
     opencv.convert(OpenCV.GRAY);
     opencv.threshold(32);
     image( opencv.image(), 0, ManagerWindowFrameHeight * 2);
-
     Blob[] blobs = opencv.blobs( 1200, ManagerWindowFrameWidth * ManagerWindowFrameHeight/2, 5,
                                  false, OpenCV.MAX_VERTICES*4 );
+    prev_blobs = blobs;
     Point[] blobtops = blobTops(blobs);
     displayBlobs(blobs, 0, ManagerWindowFrameHeight*2);
-    for (int i=0; i<blobtops.length; ++i) {
-        Point p = blobtops[i];
-        Boolean nearByFound = false;
-        for (int j=0; j<shadows.size(); ++j) {
-            Shadow s = (Shadow)shadows.get(j);
-            if (s.isNearBy(p.x, p.y)) {
-                s.update(p.x, p.y);
-                nearByFound = true;
-                s.displayVoice();
-            }
-        }
-        if (!nearByFound) {
-            Shadow s = new Shadow(p.x, p.y, this);
-            shadows.add(s);
-        }
-    }
 
+    displayShadowsManageWindow(blobtops, shadows);
     /*
       Display the result.
      */
