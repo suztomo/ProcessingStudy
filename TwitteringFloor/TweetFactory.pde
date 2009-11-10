@@ -12,6 +12,9 @@ public class TweetFactory{
     ArrayList tweets; // Array of Tweet
     Twitter twitter;
     PApplet canvas;
+    java.util.List statuses = null;
+    int position = 0;
+    int numperupdate = 20;
     public TweetFactory(PApplet _canvas) {
         //ユーザ名とパスワード
         twitter = new Twitter("Univ_of_Tokyo","testpass");
@@ -19,26 +22,34 @@ public class TweetFactory{
     }
 
     public void update() {
-        java.util.List statuses = null;
         ArrayList new_tweets = new ArrayList();
-        try{
-            //メッセージ
-            statuses = twitter.getFriendsStatuses();
-        } catch (Exception e) {
-            println("Error");
-            System.out.print(e.getMessage());
+        if (statuses == null ||
+            (statuses != null && position >= statuses.size())) {
+            try{
+                println("Loading new tweets from WWW");
+                //メッセージ
+                statuses = twitter.getFriendsStatuses();
+            } catch (Exception e) {
+                println("Error");
+                System.out.print(e.getMessage());
+                return;
+            }
+            position = 0;
         }
 
-        for (int i=0; i< statuses.size(); ++i) {
+        println("Indexes: " + str(position) + " - " + str(position + numperupdate));
+        for (int i=position;
+             i < statuses.size() && i < position + numperupdate;
+             ++i) {
             User user = (User)statuses.get(i);
-            println(str(i) + ": " + user.getScreenName() + " < " + user.getStatusText());
-            int x = 100;
-            int y = 100 + i * 30;
+            int x = int(random(0, 400));
+            int y = int(random(0, DisplayWindowHeight));
             String message = user.getStatusText();
             PFont font = selectFont(message);
             Tweet tw = new Tweet(x, y, message, font, 0, canvas);
             new_tweets.add(tw);
         }
+        position += new_tweets.size();
         tweets = new_tweets;
     }
 

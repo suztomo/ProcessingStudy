@@ -2,13 +2,14 @@ public class Tweet{
     private int x, y;
     private int vx = 0, vy = 0;
     private String message;
-    private int fontColor;
+    private int fontColor; // realColor * opacity = fontColor
     private int realColor;
-    private float opacity;
+    private float opacity = 0;
     PApplet canvas;
     PFont font;
     private int offsetX, offsetY;
     private int ceasing = 0;
+    private int frameCount = 0;
 
     public Tweet(int _x, int _y, String _text, PFont _font, int _color,
                  PApplet _canvas)
@@ -19,9 +20,11 @@ public class Tweet{
             vx = int(random(-3, 4));
             vy = int(random(-3, 4));
         }
+        float d = sqrt(float(vx * vx + vy * vy));
+        vx = ceil(vx / d);
+        vy = ceil(vy / d);
 
         message = _text;
-        realColor = color(0x90, 0xee, 0x90);
         realColor = color(int(random(0xFF)),
                           int(random(0xFF)),
                           int(random(0xFF)));
@@ -38,11 +41,14 @@ public class Tweet{
         offsetY = _offsetY;
     }
 
-    public void update(int _to_x, int _to_y) {
+    public void update() {
         setColor();
         move();
-        if (x >= 100)
+        frameCount++;
+
+        if (frameCount > (DisplayWindowFrameRate * 4)) {
             cease();
+        }
     }
 
     public void cease() {
@@ -53,18 +59,25 @@ public class Tweet{
         x += vx;
         y += vy;
         if (ceasing > 0) {
-            opacity -= 0.05;
+            opacity -= 0.02;
         }
     }
 
     public void setColor() {
         int[] c = new int[3];
+        float op = opacity;
         if (opacity <= 0) {
             return;
         }
+
+        if (frameCount < 50) {
+            op *= frameCount * 0.02;
+        }
+
+
         for (int i=0; i<3; ++i) {
             int k = (realColor >> (8 * i)) & 0xFF;
-            c[i] = 0xFF - int((0xFF - k) * opacity);
+            c[i] = 0xFF - int((0xFF - k) * op);
         }
         fontColor = color(c[2], c[1], c[0]);
     }

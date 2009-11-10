@@ -1,6 +1,6 @@
 public class DisplayFrame extends Frame{
     public DisplayFrame(){
-        setBounds(0,0, DisplayWindowWidth, DisplayWindowHeight*2);
+        setBounds(0,0, DisplayWindowWidth, DisplayWindowHeight);
         ap = new DisplayApplet();
         add(ap);
         ap.init();
@@ -12,10 +12,10 @@ int xmove = 0;
 int dxmove = 1;
 int ymove = 0;
 int dymove = 1;
-
+int DisplayWindowFrameRate = 20;
 public class DisplayApplet extends PApplet{
     public void setup(){
-        size(DisplayWindowWidth*2, DisplayWindowHeight*2);
+        size(DisplayWindowWidth, DisplayWindowHeight);
         PFont font = createFont("Osaka", 30);
         textFont(font);
         //        noLoop();
@@ -45,12 +45,13 @@ public class DisplayApplet extends PApplet{
         ap.fill(0, 0, 0);
         xmove += dxmove;
         ymove += dymove;
-        frameRate(20);
-        String msg = "こんにちはすずきともひろです ごきげんよう．元気で!";
+        frameRate(DisplayWindowFrameRate);
+
+        /*        String msg = "こんにちはすずきともひろです ごきげんよう．元気で!";
         //        msg = foldMessage(msg);
-        /*
+
           Remembers
-         */
+
         ap.text(msg, xmove+140, ymove + 100);
         ap.text(str(frameRate), 0, 0);
         if (xmove > 160) {
@@ -65,6 +66,6 @@ public class DisplayApplet extends PApplet{
         if (ymove < 0) {
             dymove = 1;
         }
-        
+         */
     }
 }
