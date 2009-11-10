@@ -33,4 +33,8 @@ public class Shadow{
     public void displayVoice() {
         voice.display();
     }
+
+    public void displayVoiceTo(PApplet ap, float scale) {
+        voice.displayTo(ap, scale);
+    }
 }

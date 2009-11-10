@@ -39,6 +39,10 @@ public class Voice{
         displayText();
     }
 
+    public void displayTo(PApplet ap, float scale) {
+        displayTextTo(ap, scale);
+    }
+
     public void displayText() {
         fill(col);
         println("displaying");
@@ -46,4 +50,7 @@ public class Voice{
         text(message, x + offsetX, y + offsetY);
     }
 
+    private void displayTextTo(PApplet ap, float scale) {
+
+    }
 }

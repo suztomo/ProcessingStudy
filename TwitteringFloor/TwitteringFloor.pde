@@ -1,3 +1,8 @@
+import twitter4j.org.json.*;
+import twitter4j.*;
+import twitter4j.http.*;
+import twitter4j.examples.*;
+
 import hypermedia.video.*;
 
 OpenCV opencv;
@@ -26,6 +31,8 @@ Point OA, OB;
 
 ArrayList shadows;
 
+BackgroundTweets bgtweets;
+
 void setup() {
     size( ManagerWindowWidth, ManagerWindowHeight );
     fr = new DisplayFrame();
@@ -45,6 +52,7 @@ void setup() {
     readPointFile();
 
     shadows = new ArrayList();
+
 }
 
 
@@ -62,7 +70,7 @@ void draw() {
       □□
      */
     image( opencv.image(), 0, 0);
-    ap.image(opencv.image(),0 ,0);
+
 
     displayAllPoints();
 
@@ -117,9 +125,11 @@ void draw() {
     Point[] blobtops = blobTops(blobs);
     displayBlobs(blobs, 0, ManagerWindowFrameHeight*2);
 
-    displayShadowsManageWindow(blobtops, shadows);
+    //displayShadowsManageWindow(blobtops, shadows);
     /*
       Display the result.
      */
+    opencv.restore();
     //    ap.image( opencv.image(), 0, 0);
+    //   ap.redraw();
 }

@@ -1,4 +1,4 @@
-void displayShadowsManageWindow(Point[] blobtops, ArrayList shadows) {
+void displayShadowsManageWindow(Point[] blobtops, ArrayList shadows, PApplet ap) {
     for (int i=0; i<blobtops.length; ++i) {
         Point p = blobtops[i];
         Boolean nearByFound = false;
