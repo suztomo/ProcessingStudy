@@ -1,34 +1,33 @@
 float VoiceMoveDelay = 1.0/10;
-
-
-public class Voice{
+public class Voice extends SmoothDisplayObject{
     private int x, y;
     private int to_x, to_y;
     private PFont font;
     private String message;
-    private int col;
-    private int offsetX, offsetY;
+    private int debugOffsetX, debugOffsetY;
     PApplet canvas;
 
     public Voice(int _x, int _y, String _text, PFont _font, PApplet _canvas,
                  int _offsetX, int _offsetY) {
+        super(color(60), random(0.6, 0.9), DisplayWindowFrameRate * 7,
+              DisplayWindowFrameRate, _canvas);
         x = _x;
         y = _y;
         font = _font;
         message = _text;
         canvas = _canvas;
-        col = color(60);
-        offsetX = _offsetX;
-        offsetY = _offsetY;
+        debugOffsetX = _offsetX;
+        debugOffsetY = _offsetY;
     }
 
     public void update(int _to_x, int _to_y) {
         to_x = _to_x;
         to_y = _to_y;
         move();
+        super.update();
     }
 
-    public void move() {
+    private void move() {
         int dx = int((to_x - x) * VoiceMoveDelay);
         int dy = int((to_y - y) * VoiceMoveDelay);
         x += dx;
@@ -36,21 +35,19 @@ public class Voice{
     }
 
     public void display() {
-        displayText();
+        super.beforeDraw();
+        displayDebug();
+        displayText(canvas, 0, 0);
     }
 
-    public void displayTo(PApplet ap, float scale) {
-        displayTextTo(ap, scale);
+    private void displayDebug() {
+        displayText(managerWindow, ManagerWindowFrameWidth,
+                    ManagerWindowFrameHeight * 2);
     }
 
-    public void displayText() {
-        fill(col);
-        println("displaying");
-        textFont(font);
-        text(message, x + offsetX, y + offsetY);
+    private void displayText(PApplet c, int offsetX, int offsetY) {
+        c.textFont(font);
+        c.text(message, x + offsetX, y + offsetY);
     }
 
-    private void displayTextTo(PApplet ap, float scale) {
-
-    }
 }

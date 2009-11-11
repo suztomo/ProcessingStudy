@@ -22,6 +22,7 @@ Blob[] prev_blobs;
 // window for Display voices
 DisplayFrame fr;
 DisplayApplet ap;
+PApplet managerWindow;
 Boolean PointsExistFlag = false;
 
 ArrayList corners;
@@ -34,6 +35,7 @@ ArrayList shadows;
 BackgroundTweets bgtweets;
 
 void setup() {
+    managerWindow = this;
     size( ManagerWindowWidth, ManagerWindowHeight );
     fr = new DisplayFrame();
 
@@ -125,11 +127,13 @@ void draw() {
     Point[] blobtops = blobTops(blobs);
     displayBlobs(blobs, 0, ManagerWindowFrameHeight*2);
 
+
+    updateShadowsByBlobtops(blobtops);
     //displayShadowsManageWindow(blobtops, shadows);
     /*
       Display the result.
      */
     opencv.restore();
     //    ap.image( opencv.image(), 0, 0);
-    //   ap.redraw();
+    //    ap.redraw();
 }

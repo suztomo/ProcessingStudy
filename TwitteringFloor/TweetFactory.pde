@@ -46,7 +46,10 @@ public class TweetFactory{
             int y = int(random(0, DisplayWindowHeight));
             String message = user.getStatusText();
             PFont font = selectFont(message);
-            Tweet tw = new Tweet(x, y, message, font, 0, canvas);
+            int realColor = color(int(random(0xFF)),
+                                  int(random(0xFF)),
+                                  int(random(0xFF)));
+            Tweet tw = new Tweet(x, y, message, font, realColor, canvas);
             new_tweets.add(tw);
         }
         position += new_tweets.size();

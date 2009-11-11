@@ -27,6 +27,16 @@ public class DisplayApplet extends PApplet{
         bgtweets.update();
     }
 
+    public void updateVoices() {
+        if (shadows == null) {
+            return;
+        }
+        for (int i=0; i<shadows.size(); ++i) {
+            Shadow s = (Shadow)shadows.get(i);
+            s.displayVoice();
+        }
+    }
+
     public void draw(){
         PFont font;
         try {
@@ -41,6 +51,7 @@ public class DisplayApplet extends PApplet{
 
         updateBackground();
 
+        updateVoices();
 
         ap.fill(0, 0, 0);
         xmove += dxmove;

@@ -1,3 +1,39 @@
+void updateShadowsByBlobtops(Point[] blobtops)
+{
+    for (int i=0; i<shadows.size(); ++i) {
+        Shadow s = (Shadow)shadows.get(i);
+        s.updated = false;
+    }
+
+    for (int i=0; i<blobtops.length; ++i) {
+        Boolean found = false;
+        Point p = blobtops[i];
+        for (int j=0; j<shadows.size(); ++j) {
+            Shadow s = (Shadow)shadows.get(j);
+            if (s.updated)
+                continue;
+            if (s.isNearBy(p)) {
+                found = true;
+                s.updated = true;
+                s.updatePoint(p);
+                break;
+            }
+        }
+        if (!found) {
+            println("Create new shadow!");
+            Shadow s = new Shadow(p.x, p.y, ap);
+            if (s != null) {
+                shadows.add(s);
+            } else {
+                println("Shadow constructor failed");
+            }
+        }
+    }
+}
+
+
+
+/*
 void displayShadowsManageWindow(Point[] blobtops, ArrayList shadows, PApplet ap) {
     for (int i=0; i<blobtops.length; ++i) {
         Point p = blobtops[i];
@@ -16,7 +52,7 @@ void displayShadowsManageWindow(Point[] blobtops, ArrayList shadows, PApplet ap)
         }
     }
 }
-
+*/
 void displayAllPoints() {
     for (int i=0; i < corners.size(); i++) {
         displayPoint((Point)corners.get(i));
@@ -48,13 +84,12 @@ Point [] blobTops(Blob[] blobs) {
 }
 
 void displayBlobs(Blob[] blobs, int offsetX, int offsetY) {
-
     for (int i=0; i<blobs.length; ++i) {
         Blob blob = blobs[i];
         fill(255, 0, 0);
         beginShape();
         Point top = new Point();
-        top.y = ManagerWindowFrameHeight;
+        top.y = ManagerWindowFrameHeight; // initial value to be updated
         int xsum = 0;
         for( int j=0; j<blob.points.length; j++ ) {
             vertex( blob.points[j].x + 0, blob.points[j].y + ManagerWindowFrameHeight * 2);

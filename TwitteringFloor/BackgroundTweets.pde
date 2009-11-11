@@ -21,7 +21,7 @@ public class BackgroundTweets{
             tw.update();
             tw.display();
         }
-        if (canvas.frameCount % (DisplayWindowFrameRate * 6) == 0) {
+        if (canvas.frameCount % (DisplayWindowFrameRate * 10) == 0) {
             factory.update();
             tweets = factory.tweets();
         }

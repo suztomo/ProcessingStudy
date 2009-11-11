@@ -1,35 +1,35 @@
-public class Tweet{
+public class Tweet extends SmoothDisplayObject{
     private int x, y;
     private int vx = 0, vy = 0;
     private String message;
-    private int fontColor; // realColor * opacity = fontColor
-    private int realColor;
-    private float opacity = 0;
     PApplet canvas;
     PFont font;
     private int offsetX, offsetY;
-    private int ceasing = 0;
-    private int frameCount = 0;
 
     public Tweet(int _x, int _y, String _text, PFont _font, int _color,
                  PApplet _canvas)
     {
+        super(_color, random(0.1, 0.5),
+              DisplayWindowFrameRate * (6 + int(random(0, 3))),
+              DisplayWindowFrameRate, _canvas);
         x = _x;
         y = _y;
         while (vx == 0 && vy == 0) {
             vx = int(random(-3, 4));
             vy = int(random(-3, 4));
         }
-        float d = sqrt(float(vx * vx + vy * vy));
-        vx = ceil(vx / d);
-        vy = ceil(vy / d);
+        float d = sqrt(float(vx * vx + vy * vy)) * random(0.2, 0.6);
+        vx = int(vx / d);
+        vy = int(vy / d);
+        if (vx == 0 && vy == 0) {
+            vx = - int(random(1, 3));
+        }
 
         message = _text;
-        realColor = color(int(random(0xFF)),
-                          int(random(0xFF)),
-                          int(random(0xFF)));
-        opacity = random(0.1, 0.5);
-        setColor();
+        if (message == null) {
+            println("wrong message");
+            message = "<error>";
+        }
         canvas = _canvas;
         font = _font;
         offsetX = offsetY = 0;
@@ -42,58 +42,28 @@ public class Tweet{
     }
 
     public void update() {
-        setColor();
         move();
-        frameCount++;
-
-        if (frameCount > (DisplayWindowFrameRate * 4)) {
-            cease();
-        }
+        super.update();
     }
 
     public void cease() {
-        ceasing = 1;
+        super.cease();
     }
 
     public void move() {
         x += vx;
         y += vy;
-        if (ceasing > 0) {
-            opacity -= 0.02;
-        }
-    }
-
-    public void setColor() {
-        int[] c = new int[3];
-        float op = opacity;
-        if (opacity <= 0) {
-            return;
-        }
-
-        if (frameCount < 50) {
-            op *= frameCount * 0.02;
-        }
-
-
-        for (int i=0; i<3; ++i) {
-            int k = (realColor >> (8 * i)) & 0xFF;
-            c[i] = 0xFF - int((0xFF - k) * op);
-        }
-        fontColor = color(c[2], c[1], c[0]);
     }
 
     public void display() {
-        if (opacity <= 0) {
+        if (super.opacity <= 0) {
             return;
         }
+        super.beforeDraw();
         displayText();
     }
 
-    public void displayText() {
-        if (message == null || opacity <= 0) {
-            return;
-        }
-        canvas.fill(fontColor);
+    private void displayText() {
         canvas.textFont(font);
         canvas.text(message, x + offsetX, y + offsetY);
     }

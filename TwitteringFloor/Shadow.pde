@@ -1,9 +1,9 @@
-int ShadowNearbyThreathold = 100;
+int ShadowNearbyThreathold = ManagerWindowFrameWidth / 6;
 
 public class Shadow{
-    private int x, y;
-    private int to_x, to_y;
+    public int x, y;
     private Voice voice;
+    public Boolean updated;
     public Shadow(int _x, int _y, PApplet canvas) {
         x = _x;
         y = _y;
@@ -11,30 +11,32 @@ public class Shadow{
         
         PFont font = selectFont(message);
         voice = new Voice(_x, _y, message, font, canvas,
-                          0, ManagerWindowFrameHeight*2);
+                          ManagerWindowFrameWidth, ManagerWindowFrameHeight*2);
+        updated = false;
 
     }
 
-    public void update(int _x, int _y) {
-        x = _x;
-        y = _y;
-        updateVoice(_x, _y);
+    public void updatePoint(Point p) {
+        x = p.x;
+        y = p.y;
+        updateVoice(x, y);
     }
 
-    public void updateVoice(int _to_x, int _to_y) {
-        voice.update(_to_x, _to_y);
+    private void updateVoice(int to_x, int to_y) {
+        voice.update(to_x, to_y);
     }
-
+    /*
     public Boolean isNearBy(int _x, int _y) {
         return (_x - x) * (_x - x) + (_y - y) * (_y - y)
+            < ShadowNearbyThreathold * ShadowNearbyThreathold;
+    }*/
+
+    public Boolean isNearBy(Point p) {
+        return (p.x - x) * (p.x - x) + (p.y - y) * (p.y - y)
             < ShadowNearbyThreathold * ShadowNearbyThreathold;
     }
 
     public void displayVoice() {
         voice.display();
-    }
-
-    public void displayVoiceTo(PApplet ap, float scale) {
-        voice.displayTo(ap, scale);
     }
 }
