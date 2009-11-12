@@ -20,10 +20,12 @@ public class BackgroundTweets{
             Tweet tw = (Tweet)tweets.get(i);
             tw.update();
             tw.display();
+
         }
         if (canvas.frameCount % (DisplayWindowFrameRate * 10) == 0) {
             factory.update();
             tweets = factory.tweets();
+
         }
     }
 }

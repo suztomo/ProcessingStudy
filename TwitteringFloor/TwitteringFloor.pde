@@ -13,8 +13,8 @@ int ManagerWindowFrameHeight = 240;
 int ManagerWindowWidth = ManagerWindowFrameWidth * 2;
 int ManagerWindowHeight = ManagerWindowFrameHeight * 3;
 
-int DisplayWindowWidth = 800;
-int DisplayWindowHeight = 600;
+int DisplayWindowWidth = 1024;
+int DisplayWindowHeight = 768;
 String PointsFileName = "points.txt";
 
 Blob[] prev_blobs;
@@ -54,7 +54,6 @@ void setup() {
     readPointFile();
 
     shadows = new ArrayList();
-
 }
 
 
@@ -74,7 +73,7 @@ void draw() {
     image( opencv.image(), 0, 0);
 
 
-    displayAllPoints();
+    displayAllCorners();
 
     /*
       display the image in memory on the right

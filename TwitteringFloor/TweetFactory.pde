@@ -10,41 +10,52 @@ import twitter4j.examples.*;
 public class TweetFactory{
     String url;
     ArrayList tweets; // Array of Tweet
+    ArrayList storedTweets;
     Twitter twitter;
     PApplet canvas;
-    java.util.List statuses = null;
     int position = 0;
-    int numperupdate = 20;
+    int numperupdate = 10;
     public TweetFactory(PApplet _canvas) {
         //ユーザ名とパスワード
         twitter = new Twitter("Univ_of_Tokyo","testpass");
         canvas = _canvas;
     }
 
+    private void loadTweetsFromWWW() {
+        java.util.List statuses = null;
+        storedTweets = new ArrayList();
+        try{
+            println("Loading new tweets from WWW...");
+            //メッセージ
+            statuses = twitter.getFriendsStatuses();
+        } catch (Exception e) {
+            println("Error");
+            System.out.print(e.getMessage());
+            return;
+        }
+        for (int i=0; i<statuses.size(); ++i) {
+            User user = (User)statuses.get(i);
+            String message = user.getStatusText();
+            storedTweets.add(message);
+        }
+        println("Successfully loaded new statuses");
+    }
+
     public void update() {
         ArrayList new_tweets = new ArrayList();
-        if (statuses == null ||
-            (statuses != null && position >= statuses.size())) {
-            try{
-                println("Loading new tweets from WWW");
-                //メッセージ
-                statuses = twitter.getFriendsStatuses();
-            } catch (Exception e) {
-                println("Error");
-                System.out.print(e.getMessage());
-                return;
-            }
+        if (storedTweets == null ||
+            (storedTweets != null && position >= storedTweets.size())) {
+            loadTweetsFromWWW();
             position = 0;
         }
 
         println("Indexes: " + str(position) + " - " + str(position + numperupdate));
         for (int i=position;
-             i < statuses.size() && i < position + numperupdate;
+             i < storedTweets.size() && i < position + numperupdate;
              ++i) {
-            User user = (User)statuses.get(i);
             int x = int(random(0, 400));
             int y = int(random(0, DisplayWindowHeight));
-            String message = user.getStatusText();
+            String message = (String)storedTweets.get(i);
             PFont font = selectFont(message);
             int realColor = color(int(random(0xFF)),
                                   int(random(0xFF)),

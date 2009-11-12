@@ -15,6 +15,7 @@ int dymove = 1;
 int DisplayWindowFrameRate = 20;
 public class DisplayApplet extends PApplet{
     public void setup(){
+        println("DisplayApplet initializing");
         size(DisplayWindowWidth, DisplayWindowHeight);
         PFont font = createFont("Osaka", 30);
         textFont(font);
@@ -57,26 +58,5 @@ public class DisplayApplet extends PApplet{
         xmove += dxmove;
         ymove += dymove;
         frameRate(DisplayWindowFrameRate);
-
-        /*        String msg = "こんにちはすずきともひろです ごきげんよう．元気で!";
-        //        msg = foldMessage(msg);
-
-          Remembers
-
-        ap.text(msg, xmove+140, ymove + 100);
-        ap.text(str(frameRate), 0, 0);
-        if (xmove > 160) {
-            dxmove *= -1;
-        }
-        if (xmove < 0) {
-            dxmove *= 1;
-        }
-        if (ymove > 111) {
-            dymove = -1;
-        }
-        if (ymove < 0) {
-            dymove = 1;
-        }
-         */
     }
 }

@@ -1,3 +1,12 @@
+/*
+  Objects that appears and disappears gradually.
+
+  The update() must called in each frame
+  To display the object inherit SmoothDisplayObject,
+  it call super.setColor() bofore drawing itself
+
+  If lifespan < 0, then the object does not cease automatically
+ */
 public class SmoothDisplayObject {
     private float opacity = 0;
     private int frameCount = 0;
@@ -23,9 +32,10 @@ public class SmoothDisplayObject {
         setColor();
         frameCount++;
         lastUpdate = canvas.frameCount;
-        if (ceasing == 0 && frameCount >= lifespan)
+        if (lifespan > 0 && ceasing == 0 && frameCount >= lifespan)
             cease();
     }
+
 
     private void setColor() {
         int[] c = new int[3];
@@ -49,8 +59,16 @@ public class SmoothDisplayObject {
         drawColor = color(c[2], c[1], c[0]);
     }
 
+    /*
+      cease() will be called automatically in update()
+      or in Shadow.startDisappear() / updateShadowByBlobtops().
+     */
     public void cease() {
         ceasing = 1;
+    }
+
+    public Boolean isDisappeared() {
+        return opacity <= 0;
     }
 
     public void beforeDraw() {
@@ -61,5 +79,4 @@ public class SmoothDisplayObject {
         }
         canvas.fill(drawColor);
     }
-
 }

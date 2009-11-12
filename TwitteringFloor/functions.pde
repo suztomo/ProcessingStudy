@@ -1,7 +1,16 @@
 void updateShadowsByBlobtops(Point[] blobtops)
 {
-    for (int i=0; i<shadows.size(); ++i) {
+    for (int i=shadows.size()-1; i>=0; --i) {
         Shadow s = (Shadow)shadows.get(i);
+        if (s.isDisappeared()) {
+            shadows.remove(i);
+            break;
+        } else if (s.isGetLost()) {
+            s.startDisappear();
+        }
+        // moves called in each frames
+        s.update();
+        // flag for location-updated
         s.updated = false;
     }
 
@@ -15,7 +24,7 @@ void updateShadowsByBlobtops(Point[] blobtops)
             if (s.isNearBy(p)) {
                 found = true;
                 s.updated = true;
-                s.updatePoint(p);
+                s.updatePoint(p); // does not move
                 break;
             }
         }
@@ -53,7 +62,7 @@ void displayShadowsManageWindow(Point[] blobtops, ArrayList shadows, PApplet ap)
     }
 }
 */
-void displayAllPoints() {
+void displayAllCorners() {
     for (int i=0; i < corners.size(); i++) {
         displayPoint((Point)corners.get(i));
     }
