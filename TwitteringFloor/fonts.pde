@@ -14,13 +14,38 @@ PFont getFontSizeof(int s) {
     return (PFont)(fonts.get(int(random(0, fonts.size()))));
 }
 
+String[] installedFontList;
+
+Boolean fontIsInstalled(String fontName) {
+  for (int i=0; i<installedFontList.length; ++i) {
+    if (fontName.equals(installedFontList[i])) {
+      
+      return true;
+    } else {
+      if (fontName.equals("HGPKyokashotai")) {
+        println("HGPKoykashotai : " + installedFontList[i]);
+      }
+
+    }
+  }
+  return false;
+}
+
 void createFonts() {
-    PFont font = createFont("Osaka", 20);
-    DefaultFont = font;
-    textFont(font);
+    PFont font;
+    DefaultFont = createFont("Osaka", 20);
+    textFont(DefaultFont);
+    installedFontList = DefaultFont.list();
     FontsBySize = new ArrayList[4];
     String[] fontNames = {
+        /* for Win */
         "Osaka",
+        "HG教科書体",
+        "HG創英角ｺﾞｼｯｸUB",
+        "HGS行書体",
+        "HG創英角ﾎﾟｯﾌﾟ体",
+        "HG丸ｺﾞｼｯｸM-PRO",
+        /* for Mac */
         "AdobeFangsongStd-Regular",
         "DFKaiShu-SB-Estd-BF",
         "STKaiti",
@@ -37,9 +62,14 @@ void createFonts() {
     for (int i=0; i < FontsBySize.length; fs+=10, ++i) {
         ArrayList pf = new ArrayList();
         for (int j = 0; j < fontNames.length; ++j) {
-            font = createFont(fontNames[j], fs, true);
-            pf.add(font);
-            println("Created font : " + fontNames[j] + "-" + str(fs));
+            String fontName = fontNames[j];
+            if (fontIsInstalled(fontName)) {
+                font = createFont(fontName, fs, true);
+                pf.add(font);
+                println("Created font : " + fontNames[j] + "-" + str(fs));
+            } else {
+              println("Failed to create font: " + fontName);
+            }
         }
         FontsBySize[i] = pf;
     }
@@ -47,6 +77,10 @@ void createFonts() {
 
 
 PFont selectFont(String message) {
+    if (FontsBySize == null) {
+        println("FontsBySize is null, use DefaultFont");
+        return DefaultFont;
+    }
     int size_max = FontsBySize.length;
     int size_index = int(random(0, size_max));
     ArrayList pf = (ArrayList) FontsBySize[size_index];
@@ -56,6 +90,10 @@ PFont selectFont(String message) {
     int kind_max = pf.size();
     int kind_index = int(random(0, kind_max));
     PFont font = (PFont) pf.get(kind_index);
+    if (font == null) {
+      println("selectFont failed (size_index, kind_index) = " + str(size_index) + ", " + str(kind_index));
+      font = DefaultFont; 
+    }
     return font;
 }
 
@@ -66,7 +104,7 @@ String foldMessage(String str, int width, PFont font){
 
 String foldMessage(String str, int width, PFont font, boolean printDebug){
   String _str = new String();
-  
+  textFont(font);
   int pointer = 0;
   for(int i=0; i<str.length(); ++i){
     // pointer ~ i文字目でwidthを超えるかどうかをチェックする

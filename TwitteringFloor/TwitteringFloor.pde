@@ -37,13 +37,12 @@ BackgroundTweets bgtweets;
 void setup() {
     managerWindow = this;
     size( ManagerWindowWidth, ManagerWindowHeight );
-    fr = new DisplayFrame();
 
     println(ap);
     println(this);
 
     opencv = new OpenCV( this );
-    opencv.capture( ManagerWindowFrameWidth, ManagerWindowFrameHeight );
+    opencv.capture( ManagerWindowFrameWidth, ManagerWindowFrameHeight, 0);
     opencv.read();     // grab frame from camera
     opencv.remember();  // store the actual image in memory
 
@@ -52,6 +51,8 @@ void setup() {
     resetPoints();
 
     readPointFile();
+
+    fr = new DisplayFrame();
 
     shadows = new ArrayList();
 }
