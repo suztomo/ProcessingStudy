@@ -9,9 +9,9 @@ public class BackgroundTweets{
     PApplet canvas;
     public BackgroundTweets(PApplet _canvas) {
         factory = new TweetFactoryFromWWW(_canvas);
-        ffactory = new TweetFactoryFromFile(_canvas, "東大");
+//        ffactory = new TweetFactoryFromFile(_canvas, "東大");
         tweets = factory.tweets();
-        tweets.addAll(ffactory.tweets());
+//        tweets.addAll(ffactory.tweets());
         canvas = _canvas;
     }
 
@@ -25,9 +25,10 @@ public class BackgroundTweets{
             tw.display();
         }
         if (canvas.frameCount % (DisplayWindowFrameRate * 10) == 0) {
-            ffactory.update();
+  //          ffactory.update();
             factory.update();
-            tweets.addAll(ffactory.tweets());
+   //         tweets.addAll(ffactory.tweets());
         }
     }
+    
 }

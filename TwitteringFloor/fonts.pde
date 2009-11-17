@@ -43,7 +43,7 @@ void createFonts() {
         "HG教科書体",
         "HG創英角ｺﾞｼｯｸUB",
         "HGS行書体",
-        "HG創英角ﾎﾟｯﾌﾟ体",
+/*        "HG創英角ﾎﾟｯﾌﾟ体",*/
         "HG丸ｺﾞｼｯｸM-PRO",
         /* for Mac */
         "AdobeFangsongStd-Regular",

@@ -7,8 +7,8 @@ import hypermedia.video.*;
 
 OpenCV opencv;
 
-int ManagerWindowFrameWidth = 360; 
-int ManagerWindowFrameHeight = 240; 
+int ManagerWindowFrameWidth = 600; 
+int ManagerWindowFrameHeight = 450; 
 
 int ManagerWindowWidth = ManagerWindowFrameWidth * 2;
 int ManagerWindowHeight = ManagerWindowFrameHeight * 3;
@@ -22,6 +22,7 @@ Blob[] prev_blobs;
 // window for Display voices
 DisplayFrame fr;
 DisplayApplet ap;
+
 PApplet managerWindow;
 Boolean PointsExistFlag = false;
 
@@ -105,6 +106,7 @@ void draw() {
       □■
       □□
      */
+     
     image( opencv.image(), ManagerWindowFrameWidth, ManagerWindowFrameHeight );
 
 
@@ -115,9 +117,9 @@ void draw() {
       ■□
      */
     opencv.convert(OpenCV.GRAY);
-    opencv.threshold(32);
+    opencv.threshold(16);
     image( opencv.image(), 0, ManagerWindowFrameHeight * 2);
-    Blob[] blobs = opencv.blobs( 1200, ManagerWindowFrameWidth * ManagerWindowFrameHeight/2, 5,
+    Blob[] blobs = opencv.blobs( 4800, ManagerWindowFrameWidth * ManagerWindowFrameHeight/2, 5,
                                  false, OpenCV.MAX_VERTICES*4 );
     prev_blobs = blobs;
     Point[] blobtops = blobTops(blobs);
