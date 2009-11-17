@@ -13,6 +13,7 @@ int dxmove = 1;
 int ymove = 0;
 int dymove = 1;
 int DisplayWindowFrameRate = 20;
+Boolean DisplayWindowReverse = true;
 public class DisplayApplet extends PApplet{
     public void setup(){
         println("DisplayApplet initializing");
@@ -22,6 +23,7 @@ public class DisplayApplet extends PApplet{
         //        noLoop();
         bgtweets = new BackgroundTweets(this);
         bgtweets.update();
+
     }
 
     public void updateBackground() {
@@ -40,6 +42,13 @@ public class DisplayApplet extends PApplet{
 
     public void draw(){
         PFont font;
+
+        if (DisplayWindowReverse) {
+            translate(DisplayWindowWidth/2, DisplayWindowHeight/2);
+            rotate(PI);
+            translate(-DisplayWindowWidth/2, -DisplayWindowHeight/2);
+        }
+
         try {
             font = (PFont)(FontsBySize[3].get(2));
         } catch(Exception e) {

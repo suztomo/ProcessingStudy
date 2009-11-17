@@ -38,16 +38,12 @@ void setup() {
     managerWindow = this;
     size( ManagerWindowWidth, ManagerWindowHeight );
 
-    println(ap);
-    println(this);
-
     opencv = new OpenCV( this );
     opencv.capture( ManagerWindowFrameWidth, ManagerWindowFrameHeight, 0);
     opencv.read();     // grab frame from camera
     opencv.remember();  // store the actual image in memory
 
     createFonts();
-
     resetPoints();
 
     readPointFile();
