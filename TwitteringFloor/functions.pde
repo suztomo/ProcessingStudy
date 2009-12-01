@@ -144,6 +144,7 @@ void calculateVecs() {
     OA.y = ((Point)corners.get(1)).y - origin.y;
     OB.x = ((Point)corners.get(2)).x - origin.x;
     OB.y = ((Point)corners.get(2)).y - origin.y;
+    
 }
 
 

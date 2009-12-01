@@ -5,10 +5,11 @@ import twitter4j.examples.*;
 
 import hypermedia.video.*;
 
+
 OpenCV opencv;
 
-int ManagerWindowFrameWidth = 600; 
-int ManagerWindowFrameHeight = 450; 
+int ManagerWindowFrameWidth = 300; 
+int ManagerWindowFrameHeight = 225; 
 
 int ManagerWindowWidth = ManagerWindowFrameWidth * 2;
 int ManagerWindowHeight = ManagerWindowFrameHeight * 3;
@@ -34,6 +35,7 @@ Point OA, OB;
 ArrayList shadows;
 
 BackgroundTweets bgtweets;
+
 
 void setup() {
     managerWindow = this;
@@ -119,6 +121,10 @@ void draw() {
     opencv.convert(OpenCV.GRAY);
     opencv.threshold(16);
     image( opencv.image(), 0, ManagerWindowFrameHeight * 2);
+    
+    /*
+      To detect small shadow, change the first minBlobs parameter in this function.
+    */
     Blob[] blobs = opencv.blobs( 4800, ManagerWindowFrameWidth * ManagerWindowFrameHeight/2, 5,
                                  false, OpenCV.MAX_VERTICES*4 );
     prev_blobs = blobs;

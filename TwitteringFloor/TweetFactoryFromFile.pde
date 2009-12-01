@@ -17,7 +17,7 @@ public class TweetFactoryFromFile extends TweetFactory {
     int numperupdate = 10;
     public TweetFactoryFromFile(PApplet _canvas, String filename) {
         super();
-        filepath = "keywords/" + filename;
+        filepath = "keywords/" + filename + ".txt";
         canvas = _canvas;
     }
 

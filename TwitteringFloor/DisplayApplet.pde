@@ -12,8 +12,10 @@ int xmove = 0;
 int dxmove = 1;
 int ymove = 0;
 int dymove = 1;
+
+
 int DisplayWindowFrameRate = 20;
-Boolean DisplayWindowReverse = true;
+Boolean DisplayWindowReverse = false;
 public class DisplayApplet extends PApplet{
     public void setup(){
         println("DisplayApplet initializing");
