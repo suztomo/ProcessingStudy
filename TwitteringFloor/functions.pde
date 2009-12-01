@@ -30,7 +30,7 @@ void updateShadowsByBlobtops(Point[] blobtops)
         }
         if (!found) {
             println("Create new shadow!");
-            Shadow s = new Shadow(p.x, p.y, ap);
+            Shadow s = new Shadow(p.x, p.y, NODEBUG ? managerWindow : ap);
             if (s != null) {
                 shadows.add(s);
             } else {
@@ -169,6 +169,22 @@ void resetPoints() {
     corners = new ArrayList();
     if (ap == null) {
         println("ap is not defined");
+    }
+}
+
+
+
+public void updateBackground() {
+    bgtweets.update();
+}
+
+public void updateVoices() {
+    if (shadows == null) {
+        return;
+    }
+    for (int i=0; i<shadows.size(); ++i) {
+        Shadow s = (Shadow)shadows.get(i);
+        s.displayVoice();
     }
 }
 

@@ -55,7 +55,7 @@ int writeKeyword(String keyword) {
   return 0;
 }
 
-int loadPeriod = 10;
+int loadPeriod = 60 * 2;
 
 void setup() {
   background(color(0xFF));

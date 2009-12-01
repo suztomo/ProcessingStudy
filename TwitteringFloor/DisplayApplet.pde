@@ -23,7 +23,11 @@ public class DisplayApplet extends PApplet{
         PFont font = createFont("Osaka", 30);
         textFont(font);
         //        noLoop();
-        bgtweets = new BackgroundTweets(this);
+        if (NODEBUG) {
+          ;
+        } else {
+          bgtweets = new BackgroundTweets(this);
+        }
         bgtweets.update();
 
     }

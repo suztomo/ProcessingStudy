@@ -36,30 +36,84 @@ ArrayList shadows;
 
 BackgroundTweets bgtweets;
 
+int SUCCESS = 0;
+int ERROR = -1;
+
+/*
+  If NODEBUG, the main screen is used to display.
+*/
+Boolean NODEBUG = true;
+
 
 void setup() {
     managerWindow = this;
     size( ManagerWindowWidth, ManagerWindowHeight );
 
+    delay(1000);
     opencv = new OpenCV( this );
     opencv.capture( ManagerWindowFrameWidth, ManagerWindowFrameHeight, 0);
-    opencv.read();     // grab frame from camera
-    opencv.remember();  // store the actual image in memory
 
     createFonts();
     resetPoints();
 
+    
     readPointFile();
 
-    fr = new DisplayFrame();
+    /*
+      To reset PointExistFlag, delete points.txt
+    */
+    if (PointsExistFlag && NODEBUG) {
+      size(DisplayWindowWidth, DisplayWindowHeight);
+    } else {
+      NODEBUG = false;
+    }
+    
+    if (NODEBUG) {
+      bgtweets = new BackgroundTweets(managerWindow);
+    } else {
+      fr = new DisplayFrame();    
+    }
 
     shadows = new ArrayList();
+    
+    vfactory = new VoiceGenerator("messages");
+
+    PFont font;
+    if (NODEBUG) {
+        background(0xFF);
+        try {
+            font = (PFont)(FontsBySize[2].get(2));
+        } catch(Exception e) {
+            font = createFont("Osaka", 12);
+        }
+        textFont(font);
+        fill(0xCC);
+        text("5秒以内にカメラの設定パネルを閉じてマウスを画面外へ出してください。", 70, 380);
+        text("プロジェクタ投影面に人や影がいないようにしてください。", 70, 470);
+    }
 }
 
 
 void draw() {
-    fill(255, 255, 255);
-    rect(0, 0, ManagerWindowWidth, ManagerWindowHeight);
+    if (NODEBUG) {
+        if (frameCount == 1) {
+            delay(1000 * 5);
+            fill(0xFF);
+            rect(0, 0, DisplayWindowWidth, DisplayWindowHeight);
+            return;   
+        } else if (frameCount == 2) {
+            delay(1000);
+            opencv.read();     // grab frame from camera
+            opencv.remember();  // store the actual image in memory
+            return;
+        }
+    }
+    fill(0xFF);
+    if (NODEBUG) {
+      rect(0, 0, DisplayWindowWidth, DisplayWindowHeight);
+    } else {
+      rect(0, 0, ManagerWindowWidth, ManagerWindowHeight);
+    }
 
 
     opencv.read();     // grab frame from camera
@@ -70,10 +124,11 @@ void draw() {
       □□
       □□
      */
-    image( opencv.image(), 0, 0);
+     if (!NODEBUG)
+       image( opencv.image(), 0, 0);
 
-
-    displayAllCorners();
+     if (!NODEBUG)
+       displayAllCorners();
 
     /*
       display the image in memory on the right
@@ -81,7 +136,8 @@ void draw() {
       □□
       □□
      */
-    image(opencv.image(OpenCV.MEMORY), ManagerWindowFrameWidth, 0);
+    if (!NODEBUG)
+      image(opencv.image(OpenCV.MEMORY), ManagerWindowFrameWidth, 0);
 
     // make the difference between the current image and the image in memory
     opencv.absDiff();
@@ -92,7 +148,8 @@ void draw() {
       ■□
       □□
      */
-    image( opencv.image(), 0, ManagerWindowFrameHeight );
+    if (!NODEBUG)
+      image( opencv.image(), 0, ManagerWindowFrameHeight );
 
     if (!PointsExistFlag) {
         // return if there is no calibration points.
@@ -108,8 +165,8 @@ void draw() {
       □■
       □□
      */
-     
-    image( opencv.image(), ManagerWindowFrameWidth, ManagerWindowFrameHeight );
+     if (!NODEBUG)
+       image( opencv.image(), ManagerWindowFrameWidth, ManagerWindowFrameHeight );
 
 
     /*
@@ -120,24 +177,29 @@ void draw() {
      */
     opencv.convert(OpenCV.GRAY);
     opencv.threshold(16);
-    image( opencv.image(), 0, ManagerWindowFrameHeight * 2);
+    if (!NODEBUG)
+      image( opencv.image(), 0, ManagerWindowFrameHeight * 2);
     
     /*
       To detect small shadow, change the first minBlobs parameter in this function.
     */
-    Blob[] blobs = opencv.blobs( 4800, ManagerWindowFrameWidth * ManagerWindowFrameHeight/2, 5,
+    Blob[] blobs = opencv.blobs( 2400, ManagerWindowFrameWidth * ManagerWindowFrameHeight/2, 5,
                                  false, OpenCV.MAX_VERTICES*4 );
     prev_blobs = blobs;
     Point[] blobtops = blobTops(blobs);
-    displayBlobs(blobs, 0, ManagerWindowFrameHeight*2);
-
+    if (!NODEBUG)
+       displayBlobs(blobs, 0, ManagerWindowFrameHeight*2);
 
     updateShadowsByBlobtops(blobtops);
     //displayShadowsManageWindow(blobtops, shadows);
     /*
       Display the result.
      */
-    opencv.restore();
+ //   opencv.restore();
     //    ap.image( opencv.image(), 0, 0);
     //    ap.redraw();
+    if (NODEBUG) {
+        updateBackground();
+        updateVoices();
+    }
 }

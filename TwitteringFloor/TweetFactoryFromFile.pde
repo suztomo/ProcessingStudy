@@ -25,7 +25,7 @@ public class TweetFactoryFromFile extends TweetFactory {
         storedTweets = new ArrayList();
         BufferedReader reader;
         try{
-            println("Loading new tweets from WWW...");
+            println("Loading new tweets from File...");
             reader = createReader(filepath);
             String line = reader.readLine();
             while(line != null) {

@@ -59,7 +59,7 @@ void createFonts() {
       20, 25, ... 45, 50
      */
     int fs = 20;
-    for (int i=0; i < FontsBySize.length; fs+=10, ++i) {
+    for (int i=0; i < FontsBySize.length; fs+=4, ++i) {
         ArrayList pf = new ArrayList();
         for (int j = 0; j < fontNames.length; ++j) {
             String fontName = fontNames[j];

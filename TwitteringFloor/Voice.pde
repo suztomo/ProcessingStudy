@@ -11,14 +11,17 @@ public class Voice extends SmoothDisplayObject{
     PApplet canvas;
     private Point drawDiff;
 
+
     public Voice(int _x, int _y, String _text, PFont _font, PApplet _canvas,
                  int _offsetX, int _offsetY) {
         super(color(0x0), random(0.6, 0.9), 0,
-              DisplayWindowFrameRate, _canvas);
+              NODEBUG ? int(frameRate) : DisplayWindowFrameRate, _canvas);
         x = _x;
         y = _y;
         font = _font;
-        message = _text;
+        message = foldMessage(_text, DisplayWindowWidth / 4, _font);
+        println("Voice : " + _text);
+//        message = _text;
         canvas = _canvas;
         debugOffsetX = _offsetX;
         debugOffsetY = _offsetY;
@@ -39,8 +42,14 @@ public class Voice extends SmoothDisplayObject{
     public void update() {
         super.update();
         /* "0.1 * vx" means friction */
-        float ddx = (k * (to_x - x) - 0.2 * vx) / m;
-        float ddy = (k * (to_y - y) - 0.2 * vy) / m;
+        float ddx, ddy;
+        if (vx < 2 && vy < 2) {
+          ddx = k * (to_x - x) / m;
+          ddy = k * (to_y - y) / m;
+        } else {
+          ddx = (k * (to_x - x) - 0.2 * vx) / m;
+          ddy = (k * (to_y - y) - 0.2 * vy) / m;
+        }
         vx += int(ddx);
         vy += int(ddy);
         move();
@@ -53,7 +62,8 @@ public class Voice extends SmoothDisplayObject{
 
     public void display() {
         super.beforeDraw();
-        displayDebug();
+        if (!NODEBUG)
+            displayDebug();
         displayText(canvas, 0, 0,
                     (float)DisplayWindowWidth/ManagerWindowFrameWidth,
                     (float)DisplayWindowHeight/ManagerWindowFrameHeight);

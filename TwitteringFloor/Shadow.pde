@@ -1,6 +1,8 @@
 int ShadowNearbyThreathold = ManagerWindowFrameWidth / 6;
 int ShadowGetLostThrethold = 10;
 
+VoiceGenerator vfactory = null;
+
 public class Shadow{
     public int x, y;
     private Voice voice;
@@ -11,13 +13,15 @@ public class Shadow{
     public Shadow(int _x, int _y, PApplet _canvas) {
         x = _x;
         y = _y;
-        String message = "あしもとをみて\niii Exhibition 13";
+        String message = "あしもとをみて\niii Exhibition 11";
+        if (vfactory != null) {
+          message = vfactory.getVoice();
+        }
         canvas = _canvas;
         PFont font = getFontSizeof(FontsBySize.length);
         voice = new Voice(_x, _y, message, font, _canvas,
                           ManagerWindowFrameWidth, ManagerWindowFrameHeight*2);
         updated = false;
-
         lastUpdate = canvas.frameCount;
     }
 

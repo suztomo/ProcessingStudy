@@ -29,7 +29,7 @@ public class Tweet extends SmoothDisplayObject{
             println("wrong message");
             _text = "<error>";
         }
-        message = foldMessage(_text, 700, _font);
+        message = foldMessage(_text, DisplayWindowWidth / 3, _font);
         canvas = _canvas;
         font = _font;
         offsetX = offsetY = 0;
