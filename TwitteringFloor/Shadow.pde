@@ -3,16 +3,20 @@ int ShadowGetLostThrethold = 10;
 
 VoiceGenerator vfactory = null;
 
+
 public class Shadow{
     public int x, y;
+    public int bx, by;
     private Voice voice;
     public Boolean updated;
     private int lastUpdate;
     private PApplet canvas;
     private int updatePointCount = 0;
+    private int changeForceInterval;
+    
     public Shadow(int _x, int _y, PApplet _canvas) {
-        x = _x;
-        y = _y;
+        x = bx = _x;
+        y = by = _y;
         String message = "あしもとをみて\niii Exhibition 11";
         if (vfactory != null) {
           message = vfactory.getVoice();
@@ -23,6 +27,7 @@ public class Shadow{
                           ManagerWindowFrameWidth, ManagerWindowFrameHeight*2);
         updated = false;
         lastUpdate = canvas.frameCount;
+        changeForceInterval = int(canvas.frameRate / 5);
     }
 
 
@@ -39,6 +44,13 @@ public class Shadow{
         lastUpdate = canvas.frameCount;
         updateVoice(x, y);
         updatePointCount++;
+        
+        // update background force
+        if (updatePointCount % changeForceInterval == 0) {
+          bgforces.changeForce(x, y, float(x - bx) * 1.0, float(y - by) * 1.0);
+          by = y;
+          bx = x;
+        }
     }
 
     private void updateVoice(int to_x, int to_y) {

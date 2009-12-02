@@ -9,7 +9,7 @@ import hypermedia.video.*;
 OpenCV opencv;
 
 int ManagerWindowFrameWidth = 300; 
-int ManagerWindowFrameHeight = 225; 
+int ManagerWindowFrameHeight = 225;
 
 int ManagerWindowWidth = ManagerWindowFrameWidth * 2;
 int ManagerWindowHeight = ManagerWindowFrameHeight * 3;
@@ -35,6 +35,8 @@ Point OA, OB;
 ArrayList shadows;
 
 BackgroundTweets bgtweets;
+BackgroundForces bgforces;
+int bgforceUpdateInterval;
 
 int SUCCESS = 0;
 int ERROR = -1;
@@ -73,6 +75,8 @@ void setup() {
     } else {
       fr = new DisplayFrame();    
     }
+    bgforces = new BackgroundForces();
+    bgforceUpdateInterval = DisplayWindowFrameRate * 5; // update each 3 seconds.
 
     shadows = new ArrayList();
     
@@ -101,7 +105,7 @@ void setup() {
 void draw() {
     if (NODEBUG) {
         if (frameCount == 1) {
-            delay(1000 * 5);
+            delay(1000 * 3);
             fill(0xFF);
             rect(0, 0, DisplayWindowWidth, DisplayWindowHeight);
             return;   
@@ -206,4 +210,9 @@ void draw() {
         updateBackground();
         updateVoices();
     }
+    
+    if (frameCount % bgforceUpdateInterval == 0) {
+      bgforces.update();
+    }
+    //bgforces.draw();
 }

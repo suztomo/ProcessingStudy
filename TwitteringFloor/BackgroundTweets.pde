@@ -24,7 +24,9 @@ public class BackgroundTweets{
             tw.update();
             tw.display();
         }
-        if (canvas.frameCount % (DisplayWindowFrameRate * 10) == 0) {
+        
+        // check the time of Tweet.Tweet() constructor
+        if (canvas.frameCount % (DisplayWindowFrameRate * 20) == 0) {
   //          ffactory.update();
             factory.update();
               tweets = factory.tweets();
