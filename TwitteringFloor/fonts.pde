@@ -1,4 +1,5 @@
 PFont DefaultFont;
+PFont BelowMessageFont;
 ArrayList[] FontsBySize;
 
 PFont getFontSizeof(int s) {
@@ -56,7 +57,7 @@ void createFonts() {
     };
 
     /*
-      20, 25, ... 45, 50
+      20, 25, ... 45, 50 
      */
     int fs = 20;
     for (int i=0; i < FontsBySize.length; fs+=4, ++i) {
@@ -73,6 +74,7 @@ void createFonts() {
         }
         FontsBySize[i] = pf;
     }
+    BelowMessageFont = createFont("HG創英角ｺﾞｼｯｸUB", 30);
 }
 
 

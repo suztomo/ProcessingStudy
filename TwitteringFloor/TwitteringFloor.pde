@@ -29,6 +29,8 @@ Boolean PointsExistFlag = false;
 
 ArrayList corners;
 
+ArrayList belowMessages;
+
 Point origin;
 Point OA, OB;
 
@@ -99,8 +101,14 @@ void setup() {
         fill(0xCC);
         text("起動中です。プロジェクタ投影面に人や影がいないようにしてください。", 70, 420);
     }
+    belowMessages = new ArrayList();
+    readBelowMessages();
 }
 
+void readBelowMessages() {
+  belowMessages.add("あしもとをみて");
+  belowMessages.add("岡村聡介 鈴木友博"); 
+}
 
 void draw() {
     if (NODEBUG) {
@@ -108,6 +116,7 @@ void draw() {
             delay(1000 * 3);
             fill(0xFF);
             rect(0, 0, DisplayWindowWidth, DisplayWindowHeight);
+            drawFrame(managerWindow);
             return;   
         } else if (frameCount == 2) {
             delay(1000);
@@ -215,4 +224,8 @@ void draw() {
       bgforces.update();
     }
     //bgforces.draw();
+    
+    if (NODEBUG) {
+      drawFrame(managerWindow);
+    }
 }

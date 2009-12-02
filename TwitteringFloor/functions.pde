@@ -184,7 +184,53 @@ public void updateVoices() {
     }
     for (int i=0; i<shadows.size(); ++i) {
         Shadow s = (Shadow)shadows.get(i);
+
         s.displayVoice();
     }
 }
+
+int topMarginWidth = 27;
+int bottomMarginWidth = 52;
+int bottomMarginHeight = 82;
+
+public void drawFrame(PApplet canvas) {
+  canvas.fill(0x0);
+  canvas.stroke(0x0);
+  quad(0, 0,
+       0, DisplayWindowHeight,
+       bottomMarginWidth, DisplayWindowHeight,
+       topMarginWidth, 0);
+  quad(DisplayWindowWidth - topMarginWidth, 0,
+       DisplayWindowWidth - bottomMarginWidth, DisplayWindowHeight,
+       DisplayWindowWidth, DisplayWindowHeight,
+       DisplayWindowWidth, 0);
+       
+  drawBelowMessage(canvas);
+}
+String belowMessage = "iii Exhibition 11";
+int belowMessageUpdateInterval = 5; // sec.
+int belowMessageIndex = 0;
+
+public void drawBelowMessage(PApplet canvas) {
+  canvas.fill(0x0);
+  canvas.stroke(0x0);
+  quad(0, DisplayWindowHeight - bottomMarginHeight,
+       0, DisplayWindowHeight,
+       DisplayWindowWidth, DisplayWindowHeight,
+       DisplayWindowWidth, DisplayWindowHeight - bottomMarginHeight);
+  canvas.fill(0xFF);
+  PFont font = BelowMessageFont;
+  textFont(font);
+  text(belowMessage, bottomMarginWidth + 20, DisplayWindowHeight - 30);
+  if (canvas.frameCount % (belowMessageUpdateInterval * canvas.frameRate) == 0) {
+    updateBelowMessage();
+  }
+}
+
+public void updateBelowMessage() {
+  belowMessage = (String)belowMessages.get(belowMessageIndex % belowMessages.size());
+  ++belowMessageIndex;
+}
+
+
 
