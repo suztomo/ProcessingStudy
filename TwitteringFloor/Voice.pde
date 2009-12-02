@@ -30,7 +30,7 @@ public class Voice extends SmoothDisplayObject{
         x = _x;
         y = _y;
         font = _font;
-        message = foldMessage(_text, DisplayWindowWidth / 4, _font);
+        message = foldMessage(_text, DisplayWindowWidth * 3/10, _font);
         println("Voice : " + _text);
 //        message = _text;
         canvas = _canvas;
