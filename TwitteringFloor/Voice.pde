@@ -43,7 +43,7 @@ public class Voice extends SmoothDisplayObject{
         super.update();
         /* "0.1 * vx" means friction */
         float ddx, ddy;
-        if (vx < 2 && vy < 2) {
+        if (false && vx < 2 && vy < 2) {
           ddx = k * (to_x - x) / m;
           ddy = k * (to_y - y) / m;
         } else {

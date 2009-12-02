@@ -79,17 +79,21 @@ void setup() {
     vfactory = new VoiceGenerator("messages");
 
     PFont font;
+    PFont fontCaption;
     if (NODEBUG) {
         background(0xFF);
         try {
             font = (PFont)(FontsBySize[2].get(2));
+            fontCaption = createFont("Osaka-UI", 50);
         } catch(Exception e) {
-            font = createFont("Osaka", 12);
+            fontCaption = font = createFont("Osaka-UI", 40);
         }
+        fill(0x77);
+        textFont(fontCaption);
+        text("あしもとをみて", 330, 300);
         textFont(font);
         fill(0xCC);
-        text("5秒以内にカメラの設定パネルを閉じてマウスを画面外へ出してください。", 70, 380);
-        text("プロジェクタ投影面に人や影がいないようにしてください。", 70, 470);
+        text("起動中です。プロジェクタ投影面に人や影がいないようにしてください。", 70, 420);
     }
 }
 
