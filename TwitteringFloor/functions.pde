@@ -208,8 +208,12 @@ public void drawFrame(PApplet canvas) {
   drawBelowMessage(canvas);
 }
 String belowMessage = "iii Exhibition 11";
-int belowMessageUpdateInterval = 5; // sec.
+int belowMessageUpdateInterval = 10; // sec.
 int belowMessageIndex = 0;
+int belowMessageCount = 0;
+int belowMessageFadeinTime = DisplayWindowFrameRate;
+int belowMessageFadeoutWindow = DisplayWindowFrameRate * 2;
+int belowMessageFadeoutTime = (belowMessageUpdateInterval - 1) * DisplayWindowFrameRate;
 
 public void drawBelowMessage(PApplet canvas) {
   canvas.fill(0x0);
@@ -218,18 +222,30 @@ public void drawBelowMessage(PApplet canvas) {
        0, DisplayWindowHeight,
        DisplayWindowWidth, DisplayWindowHeight,
        DisplayWindowWidth, DisplayWindowHeight - bottomMarginHeight);
-  canvas.fill(0xFF);
+  color c;
+  if (belowMessageCount < belowMessageFadeinTime) {
+    c = color(0xFF, int((float)0xFF * belowMessageCount / belowMessageFadeinTime));
+    fill(c);
+  } else if (belowMessageCount > belowMessageFadeoutTime - belowMessageFadeoutWindow) {
+    int d = belowMessageCount - (belowMessageFadeoutTime - belowMessageFadeoutWindow);
+    c = color(0xFf, 0xFF - int((float)0xFF * d / belowMessageFadeoutWindow));
+    fill(c);
+  } else {
+    fill(0xFF); 
+  }
   PFont font = BelowMessageFont;
   textFont(font);
   text(belowMessage, bottomMarginWidth + 20, DisplayWindowHeight - 30);
-  if (canvas.frameCount % (belowMessageUpdateInterval * canvas.frameRate) == 0) {
+  if (canvas.frameCount % (belowMessageUpdateInterval * DisplayWindowFrameRate) == 0) {
     updateBelowMessage();
   }
+  ++belowMessageCount;
 }
 
 public void updateBelowMessage() {
   belowMessage = (String)belowMessages.get(belowMessageIndex % belowMessages.size());
   ++belowMessageIndex;
+  belowMessageCount = 0;
 }
 
 

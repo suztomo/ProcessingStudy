@@ -39,10 +39,10 @@ public class SmoothDisplayObject {
 
     private void setColor() {
         int[] c = new int[3];
-        if (opacity <= 0)
+        if (opacity < 0)
             return;
         float op = opacity;
-        if (opacity <= 0) {
+        if (opacity < 0) {
             return;
         }
 
@@ -72,8 +72,10 @@ public class SmoothDisplayObject {
     }
 
     public void beforeDraw() {
-        if (opacity <= 0)
+        if (opacity < 0) {
+            canvas.fill(color(0xFF, 0));
             return;
+        }
         if (canvas.frameCount != lastUpdate) {
             update();
         }

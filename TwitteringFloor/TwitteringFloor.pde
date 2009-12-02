@@ -106,8 +106,9 @@ void setup() {
 }
 
 void readBelowMessages() {
-  belowMessages.add("あしもとをみて");
-  belowMessages.add("岡村聡介 鈴木友博"); 
+  belowMessages.add("あしもとをみて  /  岡村聡介 鈴木友博");
+  belowMessages.add("ここではきものを脱いでお上がりください。");
+  belowMessages.add("iii Exhibition 11  - 夢 見ていますか？");
 }
 
 void draw() {
@@ -223,7 +224,7 @@ void draw() {
     if (frameCount % bgforceUpdateInterval == 0) {
       bgforces.update();
     }
-    //bgforces.draw();
+//    bgforces.draw();
     
     if (NODEBUG) {
       drawFrame(managerWindow);

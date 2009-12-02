@@ -75,16 +75,24 @@ public class BackgroundForces{
         forceY[Y][X] += (idealY - forceY[Y][X]) / forceDelay;
       }
     }
-    println("UpdateForce!");
   }
   
   
   public void draw() {
+    stroke(0xCC);
     for(int Y = 0; Y < maxY; ++Y) {
       for (int X = 0; X < maxX; ++X) {
-        line(X * cellSize, Y * cellSize, X * cellSize + forceX[Y][X] * cellSize / 10.0, Y * cellSize + forceY[Y][X] * cellSize / 10.0);
-        fill(204, 102, 0);
-        ellipse(X * cellSize, Y * cellSize, 3, 3);
+        float s = sqrt(forceX[Y][X] * forceX[Y][X] +  forceY[Y][X] * forceY[Y][X]);
+        int c = 0xFF - int(s - forceNormal) * 30;
+        if (c < 0xDD) {
+          if (c < 0) {
+            c = 0;
+          }
+          stroke(c);
+          line(X * cellSize, Y * cellSize, X * cellSize + forceX[Y][X] * cellSize / 10.0, Y * cellSize + forceY[Y][X] * cellSize / 10.0);
+          fill(204, 102, 0);
+          ellipse(X * cellSize, Y * cellSize, 3, 3);  
+        }
       }
     }
   }
