@@ -78,5 +78,6 @@ public class SmoothDisplayObject {
             update();
         }
         canvas.fill(drawColor);
+        canvas.stroke(drawColor);
     }
 }

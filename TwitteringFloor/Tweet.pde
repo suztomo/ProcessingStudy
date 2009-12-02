@@ -76,5 +76,6 @@ public class Tweet extends SmoothDisplayObject{
     private void displayText() {
         canvas.textFont(font);
         canvas.text(message, x + offsetX, y + offsetY);
+        
     }
 }
