@@ -89,7 +89,6 @@ public class TwitterStreamingTrack {
         sendln(requestBody);
         sendln("");
         sendln(""); // end of request, that is two new line
-        println("request sent!");
     }
 
     private void sendln(String line) {
@@ -130,7 +129,8 @@ public class TwitterStreamingTrack {
     }
 
     private int processByteBuffers() {
-        byte[] s = new byte[1<<13];
+        int ssize = 1<<13;
+        byte[] s = new byte[ssize];
         int i;
         int k = byteBuffersStart;
         String response;
@@ -146,7 +146,7 @@ public class TwitterStreamingTrack {
           => s = {a, b, c, k, l, j, r, t, i, a, o}
 
         */
-        for (i=0; i<s.length; ++i) {
+        for (i=0; i<ssize; ++i) {
             s[i] = 0;
         }
         for (i=0; i<byteBuffersSizes[byteBuffersStart]; ++i) {
@@ -162,6 +162,10 @@ public class TwitterStreamingTrack {
                 for (int j=0; j<bs; ++j) {
                     s[i] = b[j];
                     ++i;
+                    if (i>=ssize) {
+                        // reset the buffer, but doesn't update recentTweet
+                        return 0;
+                    }
                 }
                 //                println("appended size:" + bs);
                 if (k == byteBuffersIndex) break;
@@ -210,7 +214,6 @@ public class TwitterStreamingTrack {
             return -2;
         }
         // yatta-
-        println(twitScreenName + ": " + twitText);
         return 0;
     }
 }

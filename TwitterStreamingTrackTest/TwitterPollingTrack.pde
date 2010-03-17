@@ -28,15 +28,25 @@ public class TwitterPollingTrack {
             println(e.toString());
         }
         twitterPollingURL = twitterPollingURLPrefix + encoded_keywords;
-        println(twitterPollingURL);
     }
 
     private XMLElement fetchXML() {
-        XMLElement xml = new XMLElement(parent, twitterPollingURL);
+        XMLElement xml;
+        try {
+            xml = new XMLElement(parent, twitterPollingURL);
+        } catch(Exception e) {
+            println(e.toString());
+            return null;
+        }
+
+        //        xml = new XMLElement(parent, twitterPollingURL);
         return xml;
     }
 
     private Tweet[] processXML(XMLElement xml) {
+        if (xml == null) {
+            return new Tweet[0];
+        }
         int numElements = xml.getChildCount();
         Tweet[] store = new Tweet[numElements];
         int count = 0;

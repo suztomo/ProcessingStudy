@@ -1,3 +1,2 @@
-suztomo,logcafe,東大
-waseda
-atnd
+#followmejp
+logcafe
