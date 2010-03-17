@@ -33,7 +33,8 @@ int writeKeyword(String keyword) {
   }
   println(todai);
 */
-  String head = "http://search.twitter.com/search.atom?q=";
+  String head = "http://search.twitter.com/search.atom?q=+";
+feed://search.twitter.com/search.atom?q=+早稲田+OR+東大
   /* Any Exception? */
   XMLElement xml;
   xml = new XMLElement(this, head + encoded_keyword);

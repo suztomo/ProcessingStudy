@@ -1,4 +1,5 @@
 float VoiceMoveDelay = 1.0/10;
+
 public class Voice extends SmoothDisplayObject{
     private int x, y;
     private int to_x, to_y;
@@ -130,3 +131,4 @@ public class Voice extends SmoothDisplayObject{
         //c.line((int)(scaleX * x + drawDiff.x + offsetX), (int)(scaleY * y + drawDiff.y + offsetY - textAscent() + count * (fontHeight + 5) - 5), (int)(scaleX * x + drawDiff.x + offsetX + textWidth(message)), (int)(scaleY * y + drawDiff.y + offsetY - textAscent() + count * (fontHeight + 5) - 5));
     }
 }
+

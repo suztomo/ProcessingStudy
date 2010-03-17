@@ -1,0 +1,32 @@
+
+
+TwitterStreamingTrack performs these steps.
+
+1. Creates socket (client) to stream.twitter.com:80
+2. Through the socket, sends following lines
+---
+
+POST /1/statuses/filter.json HTTP/1.1
+Authorization: Basic VW5pdl9vZl9Ub2t5bzp0ZXN0cGFzcw==
+User-Agent: curl/7.19.4 (universal-apple-darwin10.0) libcurl/7.19.4 OpenSSL/0.9.8l zlib/1.2.3
+Host: 127.0.0.1:8080
+Accept: */*
+Content-Length: 13
+Content-Type: application/x-www-form-urlencoded
+
+track=suztomo
+
+3. Receives the responses
+
+Response are :
+
+{"coordinates":null,"text":"\u307b\u3052suztomo","created_at":"Wed Mar 17 04:23:41 +0000 2010","geo":null,"in_reply_to_user_id":null,"source":"web","place":null,"truncated":false,"contributors":null,"in_reply_to_screen_name":null,"favorited":false,"user":{"contributors_enabled":false,"created_at":"Tue Jan 05 11:33:43 +0000 2010","profile_sidebar_fill_color":"e0ff92","geo_enabled":false,"profile_background_tile":false,"lang":"en","profile_sidebar_border_color":"87bc44","location":"","following":null,"verified":false,"notifications":null,
+
+
+"followers_count":12,"description":"\u672c\u90f7\u5468\u8fba\u306e\u7f8e\u98df\u3092\u98df\u3079\u307e\u304f\u308a\u307e\u3059\uff0e\u305f\u307e\u3063\u305fFat\u306f\u849f\u84bb\u30bc\u30ea\u30fc\u3067\u30ad\u30e3\u30f3\u30bb\u30eb\u2606","friends_count":0,"profile_background_color":"9ae4e8","favourites_count":0,"url":null,"profile_image_url":"http://s.twimg.com/a/1268676396
+
+
+/images/default_profile_0_normal.png","profile_text_color":"000000","protected":false,"time_zone":"Hawaii","screen_name":"suzfood","name":"\u7f8e\u98df\u6226\u968aFatman","statuses_count":154,"profile_link_color":"0000ff","id":102036627,"profile_background_image_url":"http://s.twimg.com/a/1268687377/images/themes/theme1/bg.png","utc_offset":-36000},"id":10605640288,"in_reply_to_status_id":null}
+
+
+http://processing.org/discourse/yabb2/YaBB.pl?num=1163101573/6
