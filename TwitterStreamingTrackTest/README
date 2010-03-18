@@ -82,3 +82,58 @@ Exception in thread "Animation Thread" java.lang.NullPointerException
 	at processing.core.PApplet.handleDraw(PApplet.java:1594)
 	at processing.core.PApplet.run(PApplet.java:1496)
 	at java.lang.Thread.run(Thread.java:637)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+java.io.IOException: Server returned HTTP response code: 503 for URL: http://search.twitter.com/search.atom?q=%E6%9D%B1%E5%A4%A7+OR+%E6%97%A9%E7%A8%B2%E7%94%B0
+	at sun.net.www.protocol.http.HttpURLConnection.getInputStream(HttpURLConnection.java:1313)
+	at java.net.URL.openStream(URL.java:1010)
+	at processing.core.PApplet.createInputRaw(PApplet.java:4513)
+	at processing.core.PApplet.createInput(PApplet.java:4481)
+	at processing.core.PApplet.createReader(PApplet.java:4314)
+	at processing.xml.XMLElement.<init>(XMLElement.java:222)
+	at TwitterStreamingTrackTest$TwitterPollingTrack.fetchXML(TwitterStreamingTrackTest.java:166)
+	at TwitterStreamingTrackTest$TwitterPollingTrack.getNewTweets(TwitterStreamingTrackTest.java:224)
+	at TwitterStreamingTrackTest.draw(TwitterStreamingTrackTest.java:79)
+	at processing.core.PApplet.handleDraw(PApplet.java:1594)
+	at processing.core.PApplet.run(PApplet.java:1496)
+	at java.lang.Thread.run(Thread.java:637)
+http://search.twitter.com/search.atom?q=%E6%9D%B1%E5%A4%A7+OR+%E6%97%A9%E7%A8%B2%E7%94%B0 does not exist or could not be read
+java.lang.NullPointerException
+java.io.IOException: Server returned HTTP response code: 502 for URL: http://search.twitter.com/search.atom?q=%E6%9D%B1%E5%A4%A7+OR+%E6%97%A9%E7%A8%B2%E7%94%B0
+	at sun.net.www.protocol.http.HttpURLConnection.getInputStream(HttpURLConnection.java:1313)
+	at java.net.URL.openStream(URL.java:1010)
+	at processing.core.PApplet.createInputRaw(PApplet.java:4513)
+	at processing.core.PApplet.createInput(PApplet.java:4481)
+	at processing.core.PApplet.createReader(PApplet.java:4314)
+	at processing.xml.XMLElement.<init>(XMLElement.java:222)
+	at TwitterStreamingTrackTest$TwitterPollingTrack.fetchXML(TwitterStreamingTrackTest.java:166)
+	at TwitterStreamingTrackTest$TwitterPollingTrack.getNewTweets(TwitterStreamingTrackTest.java:224)
+	at TwitterStreamingTrackTest.draw(TwitterStreamingTrackTest.java:79)
+	at processing.core.PApplet.handleDraw(PApplet.java:1594)
+	at processing.core.PApplet.run(PApplet.java:1496)
+	at java.lang.Thread.run(Thread.java:637)
+http://search.twitter.com/search.atom?q=%E6%9D%B1%E5%A4%A7+OR+%E6%97%A9%E7%A8%B2%E7%94%B0 does not exist or could not be read
+java.lang.NullPointerException
+
+
+http://www.tom-carden.co.uk/p5/flickr_rainbow_links_fixed/applet/flickr_rainbow_links_fixed.pde
+http://www.technotype.net/processing/reference/loadStrings_.html

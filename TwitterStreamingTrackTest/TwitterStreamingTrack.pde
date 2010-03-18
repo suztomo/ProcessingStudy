@@ -1,4 +1,5 @@
 import org.json.*;
+import biz.source_code.*;
 import processing.net.*;
 
 public class TwitterStreamingTrack {
@@ -17,11 +18,13 @@ public class TwitterStreamingTrack {
     private final int twitterStreamingPort=80;
     private final String twitterStreamingPath="/1/statuses/filter.json";
     private final String twitterStreamingAuthUser="Univ_of_Tokyo";
-    private final String twitterStreamingAuthPass="testpass";
-    private String authKey = "VW5pdl9vZl9Ub2t5bzp0ZXN0cGFzcw==";
+    private final String twitterStreamingAuthPass="hogefuga";
+    private String authKey;
     private Tweet recentTweet = null;
 
-    private Pattern HTTPBodyPattern = Pattern.compile("\r\n\r\n[^{]+\r\n(.*)", Pattern.DOTALL);
+    private Pattern HTTPResponsePattern = Pattern.compile("(HTTP/1.1 (\\d+).+)");
+    private Pattern HTTPBodyPattern1 = Pattern.compile("\r\n\r\n[^{]+\r\n(.*)", Pattern.DOTALL);
+    private Pattern HTTPBodyPattern2 = Pattern.compile("[0-9A-Z]\r\n(.*)", Pattern.DOTALL);
 
 
     /*
@@ -46,7 +49,7 @@ public class TwitterStreamingTrack {
 
     /*
       This method should be called each frame.
-     */
+    */
     public Tweet getNewTweet() {
         recentTweet = null;
         checkBytes();
@@ -59,7 +62,12 @@ public class TwitterStreamingTrack {
     }
 
     private void prepareAuthKey() {
-        // calculate basic auth key
+        /*
+          http://www.source-code.biz/base64coder/java/
+        */
+        authKey = Base64Coder.encodeString(twitterStreamingAuthUser + ":" +
+                                           twitterStreamingAuthPass);
+
     }
 
     private void sendHTTPRequest(String keywords) {
@@ -106,21 +114,14 @@ public class TwitterStreamingTrack {
         if (client.available() > 0) {
             int byteCount = client.readBytes(currentByteBuffer);
             if (byteCount > 0 ) {
-                // Convert the byte array to a String
                 String response;
                 byteBuffersSizes[byteBuffersIndex] = byteCount;
                 //                println("received: " + byteCount + " to buffer#" + byteBuffersIndex);
-                // Show it text area
 
                 int r =  processByteBuffers();
-                // successfully processed JSON.
                 if (r == 0) {
                     byteBuffersStart = (byteBuffersIndex+1)%byteBuffersNum;
-                } else {
-
                 }
-
-
                 byteBuffersIndex = (byteBuffersIndex+1)%byteBuffersNum;
                 currentByteBuffer = byteBuffers[byteBuffersIndex];
                 clearByteBuffer(currentByteBuffer);
@@ -183,10 +184,25 @@ public class TwitterStreamingTrack {
     private int processHTTPResponse(String response) {
         Boolean ret;
         String responseBody;
-        Matcher matcher = HTTPBodyPattern.matcher(response);
+        String statusLine, statusCode;
+        Matcher matcher;
+        matcher = HTTPResponsePattern.matcher(response);
+        // matches the first occurance.
+        if (matcher.find()) {
+            statusLine = matcher.group(1);
+            statusCode = matcher.group(2);
+            println("status: " + statusCode);
+            if (!statusCode.equals("200")) {
+                println("Error: status line is " + statusLine);
+                return -1;
+            }
+        }
+        matcher = HTTPBodyPattern1.matcher(response);
         if (!matcher.find()) {
-            //            println("cannot find responseBody");
-            return -1;
+            matcher = HTTPBodyPattern2.matcher(response);
+            if (!matcher.find()) {
+                return -1;
+            }
         }
         responseBody = matcher.group(1);
         return processHTTPResponseBody(responseBody);

@@ -9,8 +9,8 @@ int fillColor = 0x0;
 int drawCount = 1;
 void setup() {
     size(WindowWidth, WindowHeight);
-    font1 = createFont("Helvetica-Bold", 100);
-    font2 = createFont("Helvetica-Bold", 50);
+    font1 = createFont("Helvetica-Bold", 30);
+    font2 = createFont("Helvetica-Bold", 20);
 
     String keywords = join(loadStrings("stream.txt"), ",");
     tsr = new TwitterStreamingTrack(this, keywords);
@@ -49,7 +49,7 @@ void drawGradientSquare(int x, int y, int width, int height,
 
 void draw() {
     // Polling.getNewTweets should be calld in 30 seconds.
-    if (frameCount % (appletFrameRate * 30) == 0) {
+    if (frameCount % (appletFrameRate * 5) == 0) {
         Tweet[] tweets = tpr.getNewTweets();
         for (int i=0; i<tweets.length; ++i) {
             Tweet t = tweets[i];
@@ -64,7 +64,7 @@ void draw() {
     if (t != null) {
         showTweet(t);
     }
-    if (drawCount > 150) {
+    if (drawCount > 100) {
         fillColor = (fillColor == 0x0) ? 0xFF : 0x0;
         fill(fillColor);
         drawCount = 0;
@@ -72,12 +72,12 @@ void draw() {
 }
 
 void showTweet(Tweet t) {
-    int x = int(random(-400, WindowWidth/3));
-    int y = int(random(-300, WindowHeight-100));
-    //    println(t.scname + "(" + t.username +"): " + t.msg);
+    int x = int(random(0, WindowWidth/3));
+    int y = int(random(40, WindowHeight-300));
+    println(t.scname + "(" + t.username +"): " + t.msg);
     textFont(font1);
-    text(t.msg, x, 170+y);
+    text(t.msg, x, y);
     textFont(font2);
-    text("@" + t.scname + " (" + t.username + ")", 200+x, 300+y);
+    text("@" + t.scname + " (" + t.username + ")", 200+x, 60 + y);
     drawCount += 1;
  }

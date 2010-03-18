@@ -32,8 +32,15 @@ public class TwitterPollingTrack {
 
     private XMLElement fetchXML() {
         XMLElement xml;
+        String xmlString;
         try {
-            xml = new XMLElement(parent, twitterPollingURL);
+            String lines[] = loadStrings(twitterPollingURL);
+            if (lines == null) {
+                println("accessing twitter failed");
+                return null;
+            }
+            xmlString = join(lines, "");
+            xml = new XMLElement(xmlString);
         } catch(Exception e) {
             println(e.toString());
             return null;
