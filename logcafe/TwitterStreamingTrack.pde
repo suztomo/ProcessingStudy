@@ -26,6 +26,13 @@ public class TwitterStreamingTrack {
     private Pattern HTTPBodyPattern1 = Pattern.compile("\r\n\r\n[^{]+\r\n(.*)", Pattern.DOTALL);
     private Pattern HTTPBodyPattern2 = Pattern.compile("[0-9A-Z]\r\n(.*)", Pattern.DOTALL);
 
+    // "Wed Mar 17 04:23:41 +0000 2010" => "20100317042341"
+    private SimpleDateFormat incomingFormat =
+        new SimpleDateFormat("EEE MMM dd HH:mm:ss Z yyyy", Locale.US);
+    private SimpleDateFormat outgoingFormat =
+        new SimpleDateFormat("yyyyMMddHHmmss");
+    private TimeZone tz = TimeZone.getTimeZone("Asia/Tokyo");
+
 
     /*
       parent: usually this
@@ -206,15 +213,14 @@ public class TwitterStreamingTrack {
         responseBody = matcher.group(1);
         return processHTTPResponseBody(responseBody);
     }
-
     private int processHTTPResponseBody(String responseBody) {
         String twitScreenName, twitRealName;
         JSONObject j, user;
-        String twitPostedTime;
         String twitText;
-
+        String twitCreatedAt;
+        String twitPostedTime = "20100102151515";
+        Date date;
         try {
-            //            println(responseBody);
             j = new JSONObject(responseBody);
             // if an exception occurs, go to checkBytes.
 
@@ -222,7 +228,14 @@ public class TwitterStreamingTrack {
             user = j.getJSONObject("user");
             twitScreenName = user.getString("screen_name");
             twitRealName = user.getString("name");
-            twitPostedTime = j.getString("created_at");
+            twitCreatedAt = j.getString("created_at");
+            outgoingFormat.setTimeZone(tz);
+            try {
+                date = incomingFormat.parse(twitCreatedAt);
+                twitPostedTime = outgoingFormat.format(date);
+            } catch (ParseException e) {
+                println(e.toString());
+            }
             recentTweet = new Tweet(twitText, twitScreenName,
                                     twitRealName, twitPostedTime);
         } catch(JSONException e) {
