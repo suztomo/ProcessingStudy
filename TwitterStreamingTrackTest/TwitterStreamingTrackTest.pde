@@ -13,7 +13,8 @@ void setup() {
     font2 = createFont("Helvetica-Bold", 20);
 
     String keywords = join(loadStrings("stream.txt"), ",");
-    tsr = new TwitterStreamingTrack(this, keywords);
+    tsr = new TwitterStreamingTrack(this, keywords,
+                                    "suztest", "hogefuga");
 
     keywords = join(loadStrings("poll.txt"), "__PLUS__OR__PLUS__");
     tpr = new TwitterPollingTrack(this, keywords);
@@ -28,6 +29,8 @@ void setup() {
                        0, -3, 20);
     drawGradientSquare(0, WindowHeight-20, WindowWidth, 40,
                        0, +3, 20);
+
+    println("Hello, World");
 
 }
 
@@ -63,6 +66,17 @@ void draw() {
     Tweet t = tsr.getNewTweet();
     if (t != null) {
         showTweet(t);
+        String msg = t.msg;
+        String com = "say \"" + msg + "\"";
+        Process pro;
+
+        try {
+            pro = Runtime.getRuntime().exec(com);
+        } catch(IOException e) {
+            println(e.toString());
+            exit();
+        }
+
     }
     if (drawCount > 100) {
         fillColor = (fillColor == 0x0) ? 0xFF : 0x0;
@@ -80,4 +94,4 @@ void showTweet(Tweet t) {
     textFont(font2);
     text("@" + t.scname + " (" + t.username + ")", 200+x, 60 + y);
     drawCount += 1;
- }
+}

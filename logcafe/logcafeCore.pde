@@ -23,6 +23,7 @@ public class LogcafeCore{
 
     void draw(){
         int i;
+        int tws = tweets.size();
         for(i=0; i<min(ballonLimit, tweets.size()); ++i){
             FuwaTweet tw = (FuwaTweet)tweets.get(i);
             tw.draw();
@@ -50,18 +51,22 @@ public class LogcafeCore{
                 tweets.add(ft);
             }
         }
-
-        for(int i=min(ballonLimit, tweets.size())-2; i>=0; --i){
+        int tws = tweets.size();
+        for(int i=min(ballonLimit, tws)-2; i>=0; --i){
             FuwaTweet tw = (FuwaTweet)tweets.get(i);      
-            if(tw.ttl < 0){
-                if(tw.outUpdate()){ tweets.remove(i); }
+            if(tw.ttl < 0 && tws > ballonLimit){
+                if(tw.outUpdate()){
+                    tweets.remove(i);
+                }
             }
             /*
               else if(tw.state == 0){
               tw.inUpdate();
               }
             */
-            else{ tw.update(); }
+            else{
+                tw.update();
+            }
         }
     }
 }

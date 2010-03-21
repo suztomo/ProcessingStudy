@@ -17,8 +17,8 @@ public class TwitterStreamingTrack {
     private final String twitterStreamingMethod="POST";
     private final int twitterStreamingPort=80;
     private final String twitterStreamingPath="/1/statuses/filter.json";
-    private final String twitterStreamingAuthUser="Univ_of_Tokyo";
-    private final String twitterStreamingAuthPass="hogefuga";
+    private String twitterStreamingAuthUser;
+    private String twitterStreamingAuthPass;
     private String authKey;
     private Tweet recentTweet = null;
 
@@ -32,7 +32,10 @@ public class TwitterStreamingTrack {
       keyword: keyword list, comma separated
       container: Twit Array.
     */
-    public TwitterStreamingTrack(PApplet parent, String keywords) {
+    public TwitterStreamingTrack(PApplet parent, String keywords,
+                                 String username, String password) {
+        twitterStreamingAuthUser = username;
+        twitterStreamingAuthPass = password;
         this.parent = parent;
         initClient();
         prepareAuthKey();

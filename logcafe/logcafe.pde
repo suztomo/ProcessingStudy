@@ -1,11 +1,11 @@
 /* ----- setting ------ */
-final int windowWidth = 800;
-final int windowHeight = 600;
+final int windowWidth = 1200;//800;
+final int windowHeight = 800;//600;
 final int miniFrameSize = 100;
 final int defaultBallonWidth = 400;
 final int defaultBallonHeightLine = 32;
 final int defaultBallonArc = 15;
-final int ballonLimit = 10;
+final int ballonLimit = 4;
 final color bgcolor = 0;
 final int framerate = 10;
 final int TTL = 30;
@@ -45,7 +45,7 @@ SetupApplet ap;
 void setup(){
   //root = this;
   size(windowWidth, windowHeight);
-  frameRate(30);
+  frameRate(framerate);
   frame = 0;
   mode = 0; // fuwa-mode
 
@@ -59,13 +59,18 @@ void setup(){
   
   // create colors
   colors =   new color[6];
+  for (int j=0; j<6; ++j) {
+      colors[j] = color(0x55);
+  }
+  /*
   colors[0] = color(255, 0, 0);
   colors[1] = color(0, 255, 0);
   colors[2] = color(0, 0, 255);
   colors[3] = color(255, 255, 0);
   colors[4] = color(255, 0, 255);
   colors[5] = color(0, 255, 255);
-  
+  */
+
   // use sound
   minim = new Minim(this);
   //minim.debugOn();
