@@ -7,7 +7,7 @@ void setup() {
   PFont metaBold = loadFont("Menlo-Bold-48.vlw");
   textFont(metaBold, 44);
   ary = new String[10];
-  XMLElement xml = new XMLElement(this, "http://search.twitter.com/search.atom?q=");
+  XMLElement xml = new XMLElement(this, "http://search.twitter.com/search.atom?q=tokyo");
   int numSites = xml.getChildCount();
   for (int i = 0; i < numSites; i++) {
     XMLElement kid = xml.getChild(i);
