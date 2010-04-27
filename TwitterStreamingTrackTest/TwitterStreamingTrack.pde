@@ -13,7 +13,6 @@ public class TwitterStreamingTrack {
     private int[] byteBuffersSizes = new int[byteBuffersNum];
     private String encoding = "UTF-8";
     private final String twitterStreamingServer="stream.twitter.com";
-    //private final String twitterStreamingServer="localhost";
     private final String twitterStreamingMethod="POST";
     private final int twitterStreamingPort=80;
     private final String twitterStreamingPath="/1/statuses/filter.json";
@@ -21,16 +20,14 @@ public class TwitterStreamingTrack {
     private String twitterStreamingAuthPass;
     private String authKey;
     private Tweet recentTweet = null;
-
     private Pattern HTTPResponsePattern = Pattern.compile("(HTTP/1.1 (\\d+).+)");
     private Pattern HTTPBodyPattern1 = Pattern.compile("\r\n\r\n[^{]+\r\n(.*)", Pattern.DOTALL);
     private Pattern HTTPBodyPattern2 = Pattern.compile("[0-9A-Z]\r\n(.*)", Pattern.DOTALL);
 
 
     /*
-      parent: usually this
-      keyword: keyword list, comma separated
-      container: Twit Array.
+      parent: usually ``this''
+      keywords: keyword list, comma separated
     */
     public TwitterStreamingTrack(PApplet parent, String keywords,
                                  String username, String password) {
@@ -39,7 +36,7 @@ public class TwitterStreamingTrack {
         this.parent = parent;
         initClient();
         prepareAuthKey();
-        
+
         String encoded_keywords = "logcafe";
         try {
             encoded_keywords= java.net.URLEncoder.encode(keywords, encoding);
