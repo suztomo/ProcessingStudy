@@ -13,7 +13,7 @@ void setup() {
     font2 = createFont("Helvetica-Bold", 20);
 
     String keywords = join(loadStrings("stream.txt"), ",");
-    tsr = new TwitterStreamingTrack(this, keywords,
+    tsr = new TwitterStreamingTrack(this, "ipad",
                                     "suztest", "hogefuga");
 
     keywords = join(loadStrings("poll.txt"), "__PLUS__OR__PLUS__");
@@ -31,7 +31,6 @@ void setup() {
                        0, +3, 20);
 
     println("Hello, World");
-
 }
 
 
@@ -76,7 +75,6 @@ void draw() {
             println(e.toString());
             exit();
         }
-
     }
     if (drawCount > 100) {
         fillColor = (fillColor == 0x0) ? 0xFF : 0x0;
